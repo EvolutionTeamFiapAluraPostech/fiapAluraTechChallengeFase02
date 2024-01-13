@@ -1,0 +1,20 @@
+version: '3.1'
+
+services:
+  parking-db:
+    container_name: postgresql-digitalparking
+    image: postgres:15.1
+    environment:
+      POSTGRES_DB: digitalparking-db
+      POSTGRES_USER: digitalparking-postgres-user
+      POSTGRES_PASSWORD: digitalparking-postgres-pwd
+    ports:
+      - 5432:5432
+    volumes:
+      - /var/lib/postgres
+    networks:
+      - postgres-compose-network
+
+networks: 
+  postgres-compose-network:
+    driver: bridge
