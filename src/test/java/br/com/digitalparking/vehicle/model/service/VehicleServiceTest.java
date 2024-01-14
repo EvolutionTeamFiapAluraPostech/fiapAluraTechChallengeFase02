@@ -1,9 +1,13 @@
 package br.com.digitalparking.vehicle.model.service;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static br.com.digitalparking.shared.testData.user.VehicleTestData.createNewVehicle;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.AdditionalAnswers.returnsFirstArg;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import br.com.digitalparking.vehicle.repository.VehicleRepository;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -18,8 +22,17 @@ class VehicleServiceTest {
   private VehicleService vehicleService;
 
   @Test
-  void shouldSaveVehicleWhenAllVehicleAttributesAreCorrect() {
+  public void shouldSaveVehicleWhenAllVehicleAttributesAreCorrect() {
+    var vehicle = createNewVehicle();
+    when(vehicleRepository.save(vehicle)).then(returnsFirstArg());
 
+    var vehicleSaved = vehicleService.save(vehicle);
+
+    assertThat(vehicleSaved).isNotNull();
+    assertThat(vehicleSaved.getDescription()).isEqualTo(vehicle.getDescription());
+    assertThat(vehicleSaved.getLicensePlate()).isEqualTo(vehicle.getLicensePlate());
+    assertThat(vehicleSaved.getColor()).isEqualTo(vehicle.getColor());
+    verify(vehicleRepository).save(vehicle);
   }
 
 }
