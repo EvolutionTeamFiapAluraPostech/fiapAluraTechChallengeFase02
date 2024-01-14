@@ -1,6 +1,7 @@
 package br.com.digitalparking.user.model.entity;
 
 import br.com.digitalparking.shared.model.entity.BaseEntity;
+import br.com.digitalparking.vehicle.model.entity.Vehicle;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -47,6 +48,12 @@ public class User extends BaseEntity implements UserDetails {
       inverseJoinColumns = @JoinColumn(name = "authority_id"))
   private List<Authority> authorities = new ArrayList<>();
 
+  @ManyToMany(fetch = FetchType.LAZY)
+  @JoinTable(schema = "user_management", name = "users_vehicles",
+      joinColumns = @JoinColumn(name = "user_id"),
+      inverseJoinColumns = @JoinColumn(name = "vehicle_id"))
+  private List<Vehicle> vehicles = new ArrayList<>();
+
   @Override
   public String getUsername() {
     return this.email;
@@ -76,4 +83,10 @@ public class User extends BaseEntity implements UserDetails {
   public Collection<? extends GrantedAuthority> getAuthorities() {
     return List.of(new SimpleGrantedAuthority("ROLE_USER"));
   }
+
+  public boolean userHas(Vehicle vehicle) {
+    return this.getVehicles().stream()
+        .anyMatch(userVehicle -> userVehicle.getLicensePlate().equals(vehicle.getLicensePlate()));
+  }
+
 }
