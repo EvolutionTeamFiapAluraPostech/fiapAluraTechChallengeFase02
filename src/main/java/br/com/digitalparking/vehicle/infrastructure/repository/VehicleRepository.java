@@ -1,4 +1,4 @@
-package br.com.digitalparking.vehicle.repository;
+package br.com.digitalparking.vehicle.infrastructure.repository;
 
 import br.com.digitalparking.vehicle.model.entity.Vehicle;
 import java.util.UUID;

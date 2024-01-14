@@ -6,7 +6,7 @@ import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import br.com.digitalparking.vehicle.repository.VehicleRepository;
+import br.com.digitalparking.vehicle.infrastructure.repository.VehicleRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -22,7 +22,7 @@ class VehicleServiceTest {
   private VehicleService vehicleService;
 
   @Test
-  public void shouldSaveVehicleWhenAllVehicleAttributesAreCorrect() {
+  void shouldSaveVehicleWhenAllVehicleAttributesAreCorrect() {
     var vehicle = createNewVehicle();
     when(vehicleRepository.save(vehicle)).then(returnsFirstArg());
 

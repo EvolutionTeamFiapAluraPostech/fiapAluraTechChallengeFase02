@@ -1,7 +1,7 @@
 package br.com.digitalparking.vehicle.model.service;
 
 import br.com.digitalparking.vehicle.model.entity.Vehicle;
-import br.com.digitalparking.vehicle.repository.VehicleRepository;
+import br.com.digitalparking.vehicle.infrastructure.repository.VehicleRepository;
 import org.springframework.stereotype.Service;
 
 @Service
