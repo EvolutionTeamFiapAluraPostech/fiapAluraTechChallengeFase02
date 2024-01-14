@@ -6,9 +6,9 @@ import java.util.UUID;
 public final class UserTestData {
   public static final UUID DEFAULT_USER_UUID = UUID.randomUUID();
   public static final String DEFAULT_USER_UUID_FROM_STRING = DEFAULT_USER_UUID.toString();
-  public static final String DEFAULT_USER_NAME = "Thomas Anderson";
-  public static final String DEFAULT_USER_EMAIL = "thomas.anderson@itcompany.com";
-  public static final String DEFAULT_USER_CPF = "95962710088";
+  public static final String DEFAULT_USER_NAME = "Morpheus";
+  public static final String DEFAULT_USER_EMAIL = "morpheus@matrix.com";
+  public static final String DEFAULT_USER_CPF = "11955975094";
   public static final String ALTERNATIVE_USER_NAME = "Neo";
   public static final String ALTERNATIVE_USER_EMAIL = "neo@matrix.com";
   public static final String ALTERNATIVE_USER_CPF = "79693503058";

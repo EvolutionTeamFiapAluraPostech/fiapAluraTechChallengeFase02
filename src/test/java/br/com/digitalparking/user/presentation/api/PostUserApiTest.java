@@ -18,6 +18,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import br.com.digitalparking.shared.annotation.DatabaseTest;
 import br.com.digitalparking.shared.annotation.IntegrationTest;
+import br.com.digitalparking.shared.testData.user.UserTestData;
 import br.com.digitalparking.shared.util.StringUtil;
 import br.com.digitalparking.user.model.entity.User;
 import com.jayway.jsonpath.JsonPath;
@@ -42,6 +43,10 @@ class PostUserApiTest {
   public PostUserApiTest(MockMvc mockMvc, EntityManager entityManager) {
     this.mockMvc = mockMvc;
     this.entityManager = entityManager;
+  }
+
+  private User createNewUser() {
+    return UserTestData.createNewUser();
   }
 
   @Test
@@ -153,6 +158,9 @@ class PostUserApiTest {
 
   @Test
   void shouldReturnBadRequestWhenUserEmailAlreadyExits() throws Exception {
+    var user = createNewUser();
+    entityManager.merge(user);
+
     var request = post(URL_USERS)
         .contentType(APPLICATION_JSON)
         .content(USER_INPUT);
@@ -212,4 +220,37 @@ class PostUserApiTest {
     mockMvc.perform(request)
         .andExpect(status().isBadRequest());
   }
+
+  @ParameterizedTest
+  @ValueSource(strings = {"abcde"})
+  void shouldReturnBadRequestWhenUserPasswordDoesNotHaveNumber(String password) throws Exception {
+    var user = User.builder()
+        .name(DEFAULT_USER_NAME)
+        .email(DEFAULT_USER_EMAIL)
+        .password(password)
+        .build();
+
+    var request = post(URL_USERS)
+        .contentType(APPLICATION_JSON)
+        .content(USER_TEMPLATE_INPUT
+            .formatted(user.getName(), user.getEmail(), user.getCpf(), user.getPassword()));
+
+    mockMvc.perform(request)
+        .andExpect(status().isBadRequest());
+  }
+
+  @Test
+  void shouldReturnBadRequestWhenUserCpfAlreadyExits() throws Exception {
+    var user = createNewUser();
+    user.setEmail(ALTERNATIVE_USER_EMAIL);
+    entityManager.persist(user);
+
+    var request = post(URL_USERS)
+        .contentType(APPLICATION_JSON)
+        .content(USER_INPUT);
+
+    mockMvc.perform(request)
+        .andExpect(status().isConflict());
+  }
+
 }

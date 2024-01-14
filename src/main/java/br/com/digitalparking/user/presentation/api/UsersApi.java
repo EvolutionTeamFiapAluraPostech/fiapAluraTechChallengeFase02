@@ -3,6 +3,7 @@ package br.com.digitalparking.user.presentation.api;
 import br.com.digitalparking.user.application.usecase.CreateUserUseCase;
 import br.com.digitalparking.user.application.usecase.DeleteUserUseCase;
 import br.com.digitalparking.user.application.usecase.GetAllUsersUseCase;
+import br.com.digitalparking.user.application.usecase.GetUserByCpfUseCase;
 import br.com.digitalparking.user.application.usecase.GetUserByEmailUseCase;
 import br.com.digitalparking.user.application.usecase.GetUserByIdUseCase;
 import br.com.digitalparking.user.application.usecase.GetUsersByNameOrEmailUseCase;
@@ -40,6 +41,7 @@ public class UsersApi {
   private final GetUsersByNameOrEmailUseCase getUsersByNameOrEmailUseCase;
   private final UpdateUserUseCase updateUserUseCase;
   private final DeleteUserUseCase deleteUserUseCase;
+  private final GetUserByCpfUseCase getUserByCpfUseCase;
 
   public UsersApi(
       CreateUserUseCase createUserUseCase,
@@ -49,7 +51,7 @@ public class UsersApi {
       GetUserByIdUseCase getUserByIdUseCase,
       GetUsersByNameOrEmailUseCase getUsersByNameOrEmailUseCase,
       UpdateUserUseCase updateUserUseCase,
-      DeleteUserUseCase deleteUserUseCase) {
+      DeleteUserUseCase deleteUserUseCase, GetUserByCpfUseCase getUserByCpfUseCase) {
     this.createUserUseCase = createUserUseCase;
     this.getAllUsersUseCase = getAllUsersUseCase;
     this.getUserByEmailUseCase = getUserByEmailUseCase;
@@ -58,6 +60,7 @@ public class UsersApi {
     this.getUsersByNameOrEmailUseCase = getUsersByNameOrEmailUseCase;
     this.updateUserUseCase = updateUserUseCase;
     this.deleteUserUseCase = deleteUserUseCase;
+    this.getUserByCpfUseCase = getUserByCpfUseCase;
   }
 
   @GetMapping
@@ -121,4 +124,12 @@ public class UsersApi {
   public void deleteUser(@PathVariable String userUuid) {
     deleteUserUseCase.execute(userUuid);
   }
+
+  @GetMapping("/cpf/{cpf}")
+  @ResponseStatus(HttpStatus.OK)
+  public UserOutputDto getUserByCpf(@PathVariable String cpf) {
+    var user = getUserByCpfUseCase.execute(cpf);
+    return UserOutputDto.from(user);
+  }
+
 }

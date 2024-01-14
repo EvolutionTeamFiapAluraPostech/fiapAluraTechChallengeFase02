@@ -6,13 +6,15 @@ import org.springframework.data.domain.Page;
 public record UserOutputDto(
     String id,
     String name,
-    String email
+    String email,
+    String cpf
 ) {
 
   public UserOutputDto(User user) {
       this(user.getId() != null ? user.getId().toString() : null,
           user.getName(),
-          user.getEmail());
+          user.getEmail(),
+          user.getCpf());
   }
 
   public static Page<UserOutputDto> toPage(Page<User> usersPage) {

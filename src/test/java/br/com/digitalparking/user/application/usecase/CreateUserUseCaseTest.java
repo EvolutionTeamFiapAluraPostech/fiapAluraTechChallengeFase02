@@ -11,6 +11,7 @@ import static org.mockito.Mockito.when;
 import br.com.digitalparking.shared.exception.DuplicatedException;
 import br.com.digitalparking.shared.exception.ValidatorException;
 import br.com.digitalparking.shared.testData.user.UserTestData;
+import br.com.digitalparking.user.application.validator.UserCpfAlreadyRegisteredValidator;
 import br.com.digitalparking.user.application.validator.UserEmailAlreadyRegisteredValidator;
 import br.com.digitalparking.user.application.validator.UserPasswordStrengthValidator;
 import br.com.digitalparking.user.model.service.UserService;
@@ -33,6 +34,8 @@ class CreateUserUseCaseTest {
   private UserPasswordStrengthValidator userPasswordStrengthValidator;
   @Mock
   private PasswordEncoder passwordEncoder;
+  @Mock
+  private UserCpfAlreadyRegisteredValidator userCpfAlreadyRegisteredValidator;
   @InjectMocks
   private CreateUserUseCase createUserUseCase;
 
@@ -44,13 +47,15 @@ class CreateUserUseCaseTest {
 
     var userSaved = createUserUseCase.execute(user);
 
-    verify(userEmailAlreadyRegisteredValidator).validate(user.getEmail());
-    verify(userPasswordStrengthValidator).validate(originalPassword);
-    verify(passwordEncoder).encode(originalPassword);
-    verify(userService).save(user);
     assertThat(userSaved).isNotNull();
     assertThat(userSaved.getName()).isEqualTo(user.getName());
     assertThat(userSaved.getEmail()).isEqualTo(user.getEmail());
+    assertThat(userSaved.getCpf()).isEqualTo(user.getCpf());
+    verify(userEmailAlreadyRegisteredValidator).validate(user.getEmail());
+    verify(userPasswordStrengthValidator).validate(originalPassword);
+    verify(passwordEncoder).encode(originalPassword);
+    verify(userCpfAlreadyRegisteredValidator).validate(user.getCpf());
+    verify(userService).save(user);
   }
 
   @Test
