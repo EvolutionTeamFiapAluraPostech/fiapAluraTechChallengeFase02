@@ -1,7 +1,21 @@
 package br.com.digitalparking;
 
+import static br.com.digitalparking.shared.archunit.ApiMethodHasTestArchCondition.haveEquivalentApiMethodTestClass;
+import static br.com.digitalparking.shared.archunit.ClassHasTestArchCondition.haveEquivalentTestClass;
+import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
+import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.methods;
+import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
+import static com.tngtech.archunit.library.Architectures.layeredArchitecture;
+
+import br.com.digitalparking.shared.annotation.IntegrationTest;
+import com.tngtech.archunit.core.domain.JavaClasses;
+import com.tngtech.archunit.core.importer.ClassFileImporter;
+import com.tngtech.archunit.core.importer.ImportOption;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.springframework.transaction.annotation.Transactional;
+
 class ArchUnitTest {
-  /*
 
   private static JavaClasses mainPackages;
   private static JavaClasses testPackages;
@@ -119,5 +133,4 @@ class ArchUnitTest {
         .should(haveEquivalentApiMethodTestClass(testPackages))
         .check(mainPackages);
   }
-*/
 }

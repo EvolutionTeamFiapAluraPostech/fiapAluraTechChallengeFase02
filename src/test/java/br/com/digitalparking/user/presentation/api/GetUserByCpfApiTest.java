@@ -21,7 +21,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 @IntegrationTest
 @DatabaseTest
-public class GetUserByCpfApiTest {
+class GetUserByCpfApiTest {
 
   private static final String URL_USERS = "/users/cpf/";
   private final MockMvc mockMvc;
