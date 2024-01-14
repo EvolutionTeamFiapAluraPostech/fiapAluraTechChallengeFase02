@@ -7,6 +7,7 @@ create table if not exists "user_management"."vehicles"
     "created_by"    varchar(255)                null,
     "updated_at"    timestamp without time zone null,
     "updated_by"    varchar(255)                null,
+    "active"        boolean                     not null default true,
     "description"   varchar(500)                not null,
     "license_plate" varchar(500)                not null,
     "color"         varchar(14)                 not null

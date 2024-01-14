@@ -48,8 +48,8 @@ public class User extends BaseEntity implements UserDetails {
       inverseJoinColumns = @JoinColumn(name = "authority_id"))
   private List<Authority> authorities = new ArrayList<>();
 
-  @ManyToMany(fetch = FetchType.LAZY)
-  @JoinTable(schema = "user_management", name = "users_vehicles",
+  @ManyToMany(fetch = FetchType.EAGER)
+  @JoinTable(schema = "user_management", name = "user_vehicles",
       joinColumns = @JoinColumn(name = "user_id"),
       inverseJoinColumns = @JoinColumn(name = "vehicle_id"))
   private List<Vehicle> vehicles = new ArrayList<>();
@@ -85,8 +85,17 @@ public class User extends BaseEntity implements UserDetails {
   }
 
   public boolean userHas(Vehicle vehicle) {
+    if (this.getVehicles() == null || this.getVehicles().isEmpty()) {
+      return false;
+    }
     return this.getVehicles().stream()
         .anyMatch(userVehicle -> userVehicle.getLicensePlate().equals(vehicle.getLicensePlate()));
   }
 
+  public void add(Vehicle vehicle) {
+    if (this.getVehicles() == null) {
+      this.setVehicles(new ArrayList<>());
+    }
+    this.vehicles.add(vehicle);
+  }
 }

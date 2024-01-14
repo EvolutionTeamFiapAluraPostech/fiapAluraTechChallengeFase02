@@ -5,7 +5,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 @Component
-public class UserAuditInfo {
+public class UserFromSecurityContext {
 
   public User getUser() {
     var authentication = SecurityContextHolder.getContext().getAuthentication();

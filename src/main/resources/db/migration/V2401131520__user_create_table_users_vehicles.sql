@@ -1,5 +1,5 @@
-create table if not exists "user_management"."users_vehicles"
+create table if not exists "user_management"."user_vehicles"
 (
-    "user_id"        uuid                not null unique,
-    "vehicles_id"    uuid                not null unique
+    "user_id"        uuid                not null,
+    "vehicle_id"    uuid                 not null
 )

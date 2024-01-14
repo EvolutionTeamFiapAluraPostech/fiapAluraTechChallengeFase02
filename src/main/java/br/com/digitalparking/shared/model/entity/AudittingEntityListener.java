@@ -1,6 +1,6 @@
 package br.com.digitalparking.shared.model.entity;
 
-import br.com.digitalparking.user.infrastructure.security.UserAuditInfo;
+import br.com.digitalparking.user.infrastructure.security.UserFromSecurityContext;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import org.springframework.stereotype.Component;
@@ -8,23 +8,23 @@ import org.springframework.stereotype.Component;
 @Component
 public class AudittingEntityListener {
 
-  private final UserAuditInfo userAuditInfo;
+  private final UserFromSecurityContext userFromSecurityContext;
 
-  public AudittingEntityListener(UserAuditInfo userAuditInfo) {
-    this.userAuditInfo = userAuditInfo;
+  public AudittingEntityListener(UserFromSecurityContext userFromSecurityContext) {
+    this.userFromSecurityContext = userFromSecurityContext;
   }
 
   @PrePersist
   public void onPrePersist(Object entity) {
-    if (userAuditInfo.getUser() != null) {
-      ((BaseEntity) entity).setCreatedBy(userAuditInfo.getUser().getEmail());
+    if (userFromSecurityContext.getUser() != null) {
+      ((BaseEntity) entity).setCreatedBy(userFromSecurityContext.getUser().getEmail());
     }
   }
 
   @PreUpdate
   public void onPreUpdate(Object entity) {
-    if (userAuditInfo.getUser() != null) {
-      ((BaseEntity) entity).setUpdatedBy(userAuditInfo.getUser().getEmail());
+    if (userFromSecurityContext.getUser() != null) {
+      ((BaseEntity) entity).setUpdatedBy(userFromSecurityContext.getUser().getEmail());
     }
   }
 }

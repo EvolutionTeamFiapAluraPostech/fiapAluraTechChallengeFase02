@@ -16,7 +16,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(schema = "parking", name = "vehicles")
+@Table(schema = "user_management", name = "vehicles")
 public class Vehicle extends BaseEntity {
 
   @Column(nullable = false)

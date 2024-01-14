@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 import br.com.digitalparking.shared.exception.DuplicatedException;
-import br.com.digitalparking.user.infrastructure.security.UserAuditInfo;
+import br.com.digitalparking.user.infrastructure.security.UserFromSecurityContext;
 import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -20,7 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class VehicleLicensePlateValidatorTest {
 
   @Mock
-  private UserAuditInfo userAuditInfo;
+  private UserFromSecurityContext userFromSecurityContext;
   @InjectMocks
   private VehicleLicensePlateValidator vehicleLicensePlateValidator;
 
@@ -29,7 +29,7 @@ class VehicleLicensePlateValidatorTest {
     var vehicle = createNewVehicle();
     var user = createUser();
     user.setVehicles(Collections.emptyList());
-    when(userAuditInfo.getUser()).thenReturn(user);
+    when(userFromSecurityContext.getUser()).thenReturn(user);
 
     assertDoesNotThrow(() -> vehicleLicensePlateValidator.validate(vehicle));
   }
@@ -39,7 +39,7 @@ class VehicleLicensePlateValidatorTest {
     var vehicle = createNewVehicle();
     var user = createUser();
     user.setVehicles(List.of(vehicle));
-    when(userAuditInfo.getUser()).thenReturn(user);
+    when(userFromSecurityContext.getUser()).thenReturn(user);
 
     assertThrows(DuplicatedException.class, () -> vehicleLicensePlateValidator.validate(vehicle));
   }

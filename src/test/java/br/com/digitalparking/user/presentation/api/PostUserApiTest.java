@@ -18,10 +18,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import br.com.digitalparking.shared.annotation.DatabaseTest;
 import br.com.digitalparking.shared.annotation.IntegrationTest;
+import br.com.digitalparking.shared.util.StringUtil;
 import br.com.digitalparking.user.model.entity.User;
 import com.jayway.jsonpath.JsonPath;
 import jakarta.persistence.EntityManager;
-import java.util.Collections;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -42,10 +42,6 @@ class PostUserApiTest {
   public PostUserApiTest(MockMvc mockMvc, EntityManager entityManager) {
     this.mockMvc = mockMvc;
     this.entityManager = entityManager;
-  }
-
-  private static String generateStringLength(String originalString) {
-    return String.join("", Collections.nCopies(501, originalString));
   }
 
   @Test
@@ -86,7 +82,7 @@ class PostUserApiTest {
 
   @Test
   void shouldReturnBadRequestWhenUserNameLengthIsGreaterThan500Characters() throws Exception {
-    var userNameIsGreaterThan500Characters = generateStringLength(DEFAULT_USER_NAME);
+    var userNameIsGreaterThan500Characters = StringUtil.generateStringLength(        501);
     var user = User.builder()
         .name(userNameIsGreaterThan500Characters)
         .email(DEFAULT_USER_EMAIL)
@@ -120,7 +116,8 @@ class PostUserApiTest {
 
   @Test
   void shouldReturnBadRequestWhenUserEmailLengthIsGreaterThan500Characters() throws Exception {
-    var userEmailLengthIsGreaterThan500Characters = generateStringLength(DEFAULT_USER_EMAIL);
+    var userEmailLengthIsGreaterThan500Characters = StringUtil.generateStringLength(
+         501);
     var user = User.builder()
         .name(DEFAULT_USER_NAME)
         .email(userEmailLengthIsGreaterThan500Characters)
