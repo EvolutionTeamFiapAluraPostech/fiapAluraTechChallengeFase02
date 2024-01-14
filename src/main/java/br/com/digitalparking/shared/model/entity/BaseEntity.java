@@ -8,7 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.Version;
 import java.io.Serializable;
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -44,12 +44,12 @@ public abstract class BaseEntity implements Serializable, AuditableEntity {
   protected Long version;
 
   @CreationTimestamp
-  protected OffsetDateTime createdAt;
+  protected LocalDateTime createdAt;
 
   protected String createdBy;
 
   @UpdateTimestamp
-  protected OffsetDateTime updatedAt;
+  protected LocalDateTime updatedAt;
 
   protected String updatedBy;
 }
