@@ -1,6 +1,7 @@
 package br.com.digitalparking.shared.testData.user;
 
 import br.com.digitalparking.vehicle.model.entity.Vehicle;
+import java.util.UUID;
 
 public final class VehicleTestData {
 
@@ -18,6 +19,16 @@ public final class VehicleTestData {
 
   public static Vehicle createNewVehicle() {
     return Vehicle.builder()
+        .description(DEFAULT_VEHICLE_DESCRIPTION)
+        .licensePlate(DEFAULT_VEHICLE_LICENSE_PLATE)
+        .color(DEFAULT_VEHICLE_COLOR)
+        .createdBy(DEFAULT_VEHICLE_CREATED_BY)
+        .build();
+  }
+
+  public static Vehicle createVehicle() {
+    return Vehicle.builder()
+        .id(UUID.randomUUID())
         .description(DEFAULT_VEHICLE_DESCRIPTION)
         .licensePlate(DEFAULT_VEHICLE_LICENSE_PLATE)
         .color(DEFAULT_VEHICLE_COLOR)
