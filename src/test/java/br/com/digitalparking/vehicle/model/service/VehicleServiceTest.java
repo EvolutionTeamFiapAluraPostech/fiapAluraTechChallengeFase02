@@ -45,10 +45,10 @@ class VehicleServiceTest {
     var vehicle = createVehicle();
     when(vehicleRepository.findById(vehicle.getId())).thenReturn(Optional.of(vehicle));
 
-    var vehicleOptional = vehicleService.findVehicleByIdRequired(vehicle.getId());
+    var vehicleFound = vehicleService.findVehicleByIdRequired(vehicle.getId());
 
-    assertThat(vehicleOptional).isNotNull();
-    assertThat(vehicleOptional.getId()).isEqualTo(vehicle.getId());
+    assertThat(vehicleFound).isNotNull();
+    assertThat(vehicleFound.getId()).isEqualTo(vehicle.getId());
   }
 
   @Test
@@ -58,6 +58,30 @@ class VehicleServiceTest {
 
     assertThrows(NoResultException.class,
         () -> vehicleService.findVehicleByIdRequired(vehicleUuid));
+  }
+
+  @Test
+  void shouldFindVehicleByLicensePlateWhenVehicleExists() {
+    var vehicle = createVehicle();
+    when(vehicleRepository.findByLicensePlate(vehicle.getLicensePlate())).thenReturn(
+        Optional.of(vehicle));
+
+    var vehicleOptional = vehicleService.findVehicleByLicensePlate(vehicle.getLicensePlate());
+    var vehicleFound = vehicleOptional.orElse(null);
+
+    assertThat(vehicleFound).isNotNull();
+    assertThat(vehicleFound.getId()).isEqualTo(vehicle.getId());
+    assertThat(vehicleFound.getLicensePlate()).isEqualTo(vehicle.getLicensePlate());
+  }
+
+  @Test
+  void shouldThrowExceptionWhenVehicleDoesNotExist() {
+    var vehicleLicensePlate = "ABC-1234";
+    when(vehicleRepository.findByLicensePlate(vehicleLicensePlate)).thenReturn(Optional.empty());
+
+    var vehicleOptional = vehicleService.findVehicleByLicensePlate(vehicleLicensePlate);
+
+    assertThat(vehicleOptional.isPresent()).isEqualTo(Boolean.FALSE);
   }
 
 }
