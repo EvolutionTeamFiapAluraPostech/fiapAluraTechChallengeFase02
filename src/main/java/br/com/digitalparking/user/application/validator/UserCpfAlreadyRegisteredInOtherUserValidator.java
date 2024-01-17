@@ -18,11 +18,11 @@ public class UserCpfAlreadyRegisteredInOtherUserValidator {
     this.userService = userService;
   }
 
-  public void validate(String userUuid, String email) {
-    var user = userService.findByCpf(email);
+  public void validate(String userUuid, String cpf) {
+    var user = userService.findByCpf(cpf);
     if (user.isPresent() && cpfAlreadyExistsInOtherUser(userUuid, user.get())) {
       throw new DuplicatedException(new FieldError(this.getClass().getSimpleName(), "cpf",
-          USER_CPF_ALREADY_EXISTS.formatted(email)));
+          USER_CPF_ALREADY_EXISTS.formatted(cpf)));
     }
   }
 

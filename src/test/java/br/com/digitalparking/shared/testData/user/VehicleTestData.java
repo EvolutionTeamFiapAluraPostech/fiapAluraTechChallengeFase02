@@ -8,9 +8,11 @@ public final class VehicleTestData {
   public static final UUID DEFAULT_VEHICLE_UUID = UUID.randomUUID();
   public static final String DEFAULT_VEHICLE_UUID_STRING = DEFAULT_VEHICLE_UUID.toString();
   public static final String DEFAULT_VEHICLE_DESCRIPTION = "Toyota Corolla";
-  public static final String DEFAULT_VEHICLE_LICENSE_PLATE = "AAA-1A24";
+  public static final String DEFAULT_VEHICLE_LICENSE_PLATE = "AAA-1A23";
   public static final String DEFAULT_VEHICLE_COLOR = "White";
   public static final String DEFAULT_VEHICLE_CREATED_BY = "Thomas Anderson";
+  public static final UUID ALTERNATIVE_VEHICLE_UUID = UUID.randomUUID();
+  public static final String ALTERNATIVE_VEHICLE_UUID_STRING = ALTERNATIVE_VEHICLE_UUID.toString();
 
   public static final String VEHICLE_TEMPLATE_INPUT = """
       {"description": "%s", "licensePlate": "%s", "color": "%s"}
