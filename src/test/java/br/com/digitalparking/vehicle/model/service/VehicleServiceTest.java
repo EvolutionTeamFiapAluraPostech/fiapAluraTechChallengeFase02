@@ -3,6 +3,7 @@ package br.com.digitalparking.vehicle.model.service;
 import static br.com.digitalparking.shared.testData.user.VehicleTestData.createNewVehicle;
 import static br.com.digitalparking.shared.testData.user.VehicleTestData.createVehicle;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.Mockito.verify;
@@ -84,6 +85,22 @@ class VehicleServiceTest {
     var vehicles = vehicleService.findVehicleByLicensePlate(vehicleLicensePlate);
 
     assertThat(vehicles.size()).isEqualTo(0);
+  }
+
+  @Test
+  void shouldDeleteVehicleByIdWhenVehicleExists() {
+    var vehicle = createVehicle();
+    when(vehicleRepository.findById(vehicle.getId())).thenReturn(Optional.of(vehicle));
+
+    assertDoesNotThrow(() -> vehicleService.deleteVehicleById(vehicle.getId()));
+  }
+
+  @Test
+  void shouldThrowExceptionWhenVehicleWillBeDeletedAndItDoesNotExist() {
+    var vehicleUuid = UUID.randomUUID();
+    when(vehicleRepository.findById(vehicleUuid)).thenReturn(Optional.empty());
+
+    assertThrows(NoResultException.class, () -> vehicleService.deleteVehicleById(vehicleUuid));
   }
 
 }

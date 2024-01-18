@@ -32,4 +32,10 @@ public class VehicleService {
   public List<Vehicle> findVehicleByLicensePlate(String licensePlate) {
     return vehicleRepository.findByLicensePlate(licensePlate);
   }
+
+  public void deleteVehicleById(UUID vehicleUuid) {
+    var vehicle = this.findVehicleByIdRequired(vehicleUuid);
+    vehicle.setDeleted(true);
+    this.save(vehicle);
+  }
 }
