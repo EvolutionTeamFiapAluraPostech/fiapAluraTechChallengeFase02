@@ -1,5 +1,6 @@
 package br.com.digitalparking.vehicle.presentation.api;
 
+import static br.com.digitalparking.shared.testData.user.UserTestData.createNewUser;
 import static br.com.digitalparking.shared.testData.user.VehicleTestData.ALTERNATIVE_VEHICLE_COLOR;
 import static br.com.digitalparking.shared.testData.user.VehicleTestData.ALTERNATIVE_VEHICLE_DESCRIPTION;
 import static br.com.digitalparking.shared.testData.user.VehicleTestData.ALTERNATIVE_VEHICLE_LICENSE_PLATE;
@@ -16,7 +17,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import br.com.digitalparking.shared.annotation.DatabaseTest;
 import br.com.digitalparking.shared.annotation.IntegrationTest;
 import br.com.digitalparking.shared.infrastructure.TestAuthentication;
-import br.com.digitalparking.shared.testData.user.UserTestData;
 import br.com.digitalparking.user.model.entity.User;
 import br.com.digitalparking.vehicle.model.entity.Vehicle;
 import com.jayway.jsonpath.JsonPath;
@@ -50,15 +50,16 @@ class PutVehicleApiTest {
     return entityManager.merge(vehicle);
   }
 
-  private User createAndPersistUser() {
-    var user = UserTestData.createNewUser();
+  private User createAndPersistUser(Vehicle vehicle) {
+    var user = createNewUser();
+    user.add(vehicle);
     return entityManager.merge(user);
   }
 
   @Test
   void shouldUpdateVehicle() throws Exception {
-    var user = createAndPersistUser();
     var vehicle = createAndPersistVehicle();
+    var user = createAndPersistUser(vehicle);
 
     var request = MockMvcRequestBuilders.put(URL_VEHICLES + vehicle.getId())
         .contentType(APPLICATION_JSON)
