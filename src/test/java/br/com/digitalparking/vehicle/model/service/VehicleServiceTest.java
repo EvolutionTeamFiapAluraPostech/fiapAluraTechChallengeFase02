@@ -10,6 +10,8 @@ import static org.mockito.Mockito.when;
 
 import br.com.digitalparking.shared.exception.NoResultException;
 import br.com.digitalparking.vehicle.infrastructure.repository.VehicleRepository;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
@@ -64,24 +66,24 @@ class VehicleServiceTest {
   void shouldFindVehicleByLicensePlateWhenVehicleExists() {
     var vehicle = createVehicle();
     when(vehicleRepository.findByLicensePlate(vehicle.getLicensePlate())).thenReturn(
-        Optional.of(vehicle));
+        List.of(vehicle));
 
-    var vehicleOptional = vehicleService.findVehicleByLicensePlate(vehicle.getLicensePlate());
-    var vehicleFound = vehicleOptional.orElse(null);
+    var vehicles = vehicleService.findVehicleByLicensePlate(vehicle.getLicensePlate());
 
-    assertThat(vehicleFound).isNotNull();
-    assertThat(vehicleFound.getId()).isEqualTo(vehicle.getId());
-    assertThat(vehicleFound.getLicensePlate()).isEqualTo(vehicle.getLicensePlate());
+    assertThat(vehicles).isNotNull();
+    assertThat(vehicles.get(0).getId()).isEqualTo(vehicle.getId());
+    assertThat(vehicles.get(0).getLicensePlate()).isEqualTo(vehicle.getLicensePlate());
   }
 
   @Test
   void shouldThrowExceptionWhenVehicleDoesNotExist() {
     var vehicleLicensePlate = "ABC-1234";
-    when(vehicleRepository.findByLicensePlate(vehicleLicensePlate)).thenReturn(Optional.empty());
+    when(vehicleRepository.findByLicensePlate(vehicleLicensePlate)).thenReturn(
+        Collections.emptyList());
 
-    var vehicleOptional = vehicleService.findVehicleByLicensePlate(vehicleLicensePlate);
+    var vehicles = vehicleService.findVehicleByLicensePlate(vehicleLicensePlate);
 
-    assertThat(vehicleOptional.isPresent()).isEqualTo(Boolean.FALSE);
+    assertThat(vehicles.size()).isEqualTo(0);
   }
 
 }

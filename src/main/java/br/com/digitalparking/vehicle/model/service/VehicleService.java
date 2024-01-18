@@ -5,7 +5,7 @@ import static br.com.digitalparking.vehicle.model.message.VehicleMessages.VEHICL
 import br.com.digitalparking.shared.exception.NoResultException;
 import br.com.digitalparking.vehicle.infrastructure.repository.VehicleRepository;
 import br.com.digitalparking.vehicle.model.entity.Vehicle;
-import java.util.Optional;
+import java.util.List;
 import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.FieldError;
@@ -29,7 +29,7 @@ public class VehicleService {
             VEHICLE_ID_NOT_FOUND.formatted(vehicleUuid))));
   }
 
-  public Optional<Vehicle> findVehicleByLicensePlate(String licensePlate) {
+  public List<Vehicle> findVehicleByLicensePlate(String licensePlate) {
     return vehicleRepository.findByLicensePlate(licensePlate);
   }
 }
