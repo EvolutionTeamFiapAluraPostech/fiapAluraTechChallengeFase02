@@ -2,7 +2,6 @@ package br.com.digitalparking.user.model.service;
 
 import static br.com.digitalparking.shared.testData.user.UserTestData.DEFAULT_USER_EMAIL;
 import static br.com.digitalparking.shared.testData.user.UserTestData.DEFAULT_USER_UUID;
-import static br.com.digitalparking.shared.testData.user.UserTestData.DEFAULT_USER_UUID_FROM_STRING;
 import static br.com.digitalparking.shared.testData.user.UserTestData.createNewUser;
 import static br.com.digitalparking.shared.testData.user.UserTestData.createUser;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -274,7 +273,7 @@ class UserServiceTest {
     var user = createUser();
     when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
 
-    var userFound = userService.findUserByIdRequired(user.getId().toString());
+    var userFound = userService.findUserByIdRequired(user.getId());
 
     assertThat(userFound).isNotNull();
     assertThat(userFound.getName()).isEqualTo(user.getName());
@@ -294,7 +293,7 @@ class UserServiceTest {
     when(userRepository.findById(DEFAULT_USER_UUID)).thenReturn(Optional.empty());
 
     assertThrows(NoResultException.class,
-        () -> userService.findUserByIdRequired(DEFAULT_USER_UUID_FROM_STRING));
+        () -> userService.findUserByIdRequired(DEFAULT_USER_UUID));
   }
 
 }

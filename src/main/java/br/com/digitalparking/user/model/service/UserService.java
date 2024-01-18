@@ -58,8 +58,8 @@ public class UserService {
     return userRepository.findById(uuid);
   }
 
-  public User findUserByIdRequired(String userUuid) {
-    return userRepository.findById(UUID.fromString(userUuid))
+  public User findUserByIdRequired(UUID userUuid) {
+    return userRepository.findById(userUuid)
         .orElseThrow(
             () -> new NoResultException(new FieldError(this.getClass().getSimpleName(), "cpf",
                 USER_ID_NOT_FOUND.formatted(userUuid))));

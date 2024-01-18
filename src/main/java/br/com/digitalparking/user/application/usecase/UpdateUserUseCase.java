@@ -5,6 +5,7 @@ import br.com.digitalparking.user.application.validator.UserCpfAlreadyRegistered
 import br.com.digitalparking.user.application.validator.UserEmailAlreadyRegisteredInOtherUserValidator;
 import br.com.digitalparking.user.model.entity.User;
 import br.com.digitalparking.user.model.service.UserService;
+import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,7 +36,7 @@ public class UpdateUserUseCase {
     userCpfAlreadyRegisteredInOtherUserValidator.validate(userUuid,
         userWithUpdatedAttributes.getCpf());
 
-    var userSaved = userService.findUserByIdRequired(userUuid);
+    var userSaved = userService.findUserByIdRequired(UUID.fromString(userUuid));
     var userToUpdate = updateAttibutesToUser(userSaved, userWithUpdatedAttributes);
     return userService.save(userToUpdate);
   }

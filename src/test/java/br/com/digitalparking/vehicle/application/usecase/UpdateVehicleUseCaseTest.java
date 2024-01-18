@@ -1,5 +1,6 @@
 package br.com.digitalparking.vehicle.application.usecase;
 
+import static br.com.digitalparking.shared.testData.user.UserTestData.createUser;
 import static br.com.digitalparking.shared.testData.user.VehicleTestData.DEFAULT_VEHICLE_DESCRIPTION;
 import static br.com.digitalparking.shared.testData.user.VehicleTestData.DEFAULT_VEHICLE_LICENSE_PLATE;
 import static br.com.digitalparking.shared.testData.user.VehicleTestData.createVehicle;
@@ -9,6 +10,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import br.com.digitalparking.shared.model.entity.validator.UuidValidator;
+import br.com.digitalparking.user.infrastructure.security.UserFromSecurityContext;
 import br.com.digitalparking.vehicle.application.validation.VehicleLicensePlateInOtherVehicleValidator;
 import br.com.digitalparking.vehicle.model.entity.Vehicle;
 import br.com.digitalparking.vehicle.model.service.VehicleService;
@@ -27,11 +29,14 @@ class UpdateVehicleUseCaseTest {
   private UuidValidator uuidValidator;
   @Mock
   private VehicleLicensePlateInOtherVehicleValidator vehicleLicensePlateInOtherVehicleValidator;
+  @Mock
+  private UserFromSecurityContext userFromSecurityContext;
   @InjectMocks
   private UpdateVehicleUseCase updateVehicleUseCase;
 
   @Test
   void shouldUpdateVehicle() {
+    var user = createUser();
     var vehicle = createVehicle();
     var vehicleToUpdate = Vehicle.builder()
         .id(vehicle.getId())
@@ -40,6 +45,7 @@ class UpdateVehicleUseCaseTest {
         .color(DEFAULT_VEHICLE_LICENSE_PLATE)
         .build();
 
+    when(userFromSecurityContext.getUser()).thenReturn(user);
     when(vehicleService.findVehicleByIdRequired(vehicle.getId())).thenReturn(vehicleToUpdate);
     when(vehicleService.save(any())).thenReturn(vehicleToUpdate);
 
@@ -48,7 +54,8 @@ class UpdateVehicleUseCaseTest {
     assertThat(vehicleUpdated).isNotNull();
     assertThat(vehicleUpdated).usingRecursiveComparison().isEqualTo(vehicleToUpdate);
     verify(uuidValidator).validate(vehicleToUpdate.getId().toString());
-    verify(vehicleLicensePlateInOtherVehicleValidator).validate(vehicle.getLicensePlate(), vehicle.getId().toString());
+    verify(vehicleLicensePlateInOtherVehicleValidator).validate(vehicle.getLicensePlate(),
+        vehicle.getId().toString(), user.getId());
     verify(vehicleService).save(vehicleToUpdate);
   }
 

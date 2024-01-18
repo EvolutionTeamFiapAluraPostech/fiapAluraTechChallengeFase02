@@ -43,7 +43,7 @@ class UpdateUserUseCaseTest {
         .email(DEFAULT_USER_EMAIL)
         .password(DEFAULT_USER_PASSWORD)
         .build();
-    when(userService.findUserByIdRequired(userFound.getId().toString())).thenReturn(userFound);
+    when(userService.findUserByIdRequired(userFound.getId())).thenReturn(userFound);
     when(userService.save(any())).thenReturn(userToUpdate);
 
     var userUpdated = updateUserUseCase.execute(userFound.getId().toString(), userToUpdate);

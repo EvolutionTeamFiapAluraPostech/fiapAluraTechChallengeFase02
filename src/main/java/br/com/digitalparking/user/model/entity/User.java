@@ -12,6 +12,7 @@ import jakarta.persistence.Table;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -84,18 +85,24 @@ public class User extends BaseEntity implements UserDetails {
     return List.of(new SimpleGrantedAuthority("ROLE_USER"));
   }
 
-  public boolean userHas(Vehicle vehicle) {
-    if (this.getVehicles() == null || this.getVehicles().isEmpty()) {
-      return false;
-    }
-    return this.getVehicles().stream()
-        .anyMatch(userVehicle -> userVehicle.getLicensePlate().equals(vehicle.getLicensePlate()));
-  }
-
   public void add(Vehicle vehicle) {
     if (this.getVehicles() == null) {
       this.setVehicles(new ArrayList<>());
     }
-    this.vehicles.add(vehicle);
+    if (!this.userHasVehicleWithLicensePlate(vehicle.getLicensePlate())) {
+      this.vehicles.add(vehicle);
+    }
+  }
+
+  public boolean userHasVehicleWithLicensePlate(String licensePlate) {
+    if (this.getVehicles() == null || this.getVehicles().isEmpty()) {
+      return false;
+    }
+    return getVehicleBy(licensePlate).isPresent();
+  }
+
+  public Optional<Vehicle> getVehicleBy(String licensePlate) {
+    return getVehicles().stream().filter(vehicle -> vehicle.getLicensePlate().equals(licensePlate))
+        .findFirst();
   }
 }

@@ -13,14 +13,16 @@ public record VehicleInputDto(
     String licensePlate,
     @NotBlank(message = "Color is required.")
     @Length(max = 10, message = "Max color length is 50 characters.")
-    String color) {
+    String color,
+    Boolean active) {
 
-  public Vehicle toVehicle() {
+  public static Vehicle toVehicle(VehicleInputDto vehicleInputDto) {
+    var activeVehicle = vehicleInputDto.active != null ? vehicleInputDto.active : true;
     return Vehicle.builder()
-        .description(this.description)
-        .licensePlate(this.licensePlate)
-        .color(this.color)
-        .active(true)
+        .description(vehicleInputDto.description)
+        .licensePlate(vehicleInputDto.licensePlate)
+        .color(vehicleInputDto.color)
+        .active(activeVehicle)
         .build();
   }
 }
