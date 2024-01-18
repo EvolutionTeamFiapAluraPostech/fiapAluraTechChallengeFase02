@@ -90,17 +90,8 @@ class VehicleServiceTest {
   @Test
   void shouldDeleteVehicleByIdWhenVehicleExists() {
     var vehicle = createVehicle();
-    when(vehicleRepository.findById(vehicle.getId())).thenReturn(Optional.of(vehicle));
 
-    assertDoesNotThrow(() -> vehicleService.deleteVehicleById(vehicle.getId()));
-  }
-
-  @Test
-  void shouldThrowExceptionWhenVehicleWillBeDeletedAndItDoesNotExist() {
-    var vehicleUuid = UUID.randomUUID();
-    when(vehicleRepository.findById(vehicleUuid)).thenReturn(Optional.empty());
-
-    assertThrows(NoResultException.class, () -> vehicleService.deleteVehicleById(vehicleUuid));
+    assertDoesNotThrow(() -> vehicleService.deleteVehicleById(vehicle));
   }
 
 }

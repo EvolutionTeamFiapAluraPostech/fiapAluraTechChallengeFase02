@@ -33,8 +33,7 @@ public class VehicleService {
     return vehicleRepository.findByLicensePlate(licensePlate);
   }
 
-  public void deleteVehicleById(UUID vehicleUuid) {
-    var vehicle = this.findVehicleByIdRequired(vehicleUuid);
+  public void deleteVehicleById(Vehicle vehicle) {
     vehicle.setDeleted(true);
     this.save(vehicle);
   }
