@@ -47,9 +47,7 @@ class GetVehicleByIdAndUserUseCaseTest {
 
   @Test
   void shouldReturnNullWhenVehicleDoesNotExist() {
-    var user = createUser();
     when(vehicleService.findVehicleByIdRequired(DEFAULT_VEHICLE_UUID)).thenReturn(null);
-    when(userFromSecurityContext.getUser()).thenReturn(user);
 
     var vehicleFound = getVehicleByIdAndUserUseCase.execute(DEFAULT_VEHICLE_UUID_STRING);
 

@@ -5,7 +5,6 @@ import static br.com.digitalparking.vehicle.model.message.VehicleMessages.VEHICL
 import br.com.digitalparking.shared.exception.DuplicatedException;
 import br.com.digitalparking.user.infrastructure.security.UserFromSecurityContext;
 import br.com.digitalparking.user.model.entity.User;
-import br.com.digitalparking.vehicle.model.entity.Vehicle;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.FieldError;
 
@@ -18,17 +17,17 @@ public class VehicleLicensePlateValidator {
     this.userFromSecurityContext = userFromSecurityContext;
   }
 
-  public void validate(Vehicle vehicle) {
+  public void validate(String licensePlate) {
     var user = userFromSecurityContext.getUser();
-    var isVehicleFound = checkIfTheVehicleWasAlredyRegistredByUser(vehicle, user);
+    var isVehicleFound = checkIfTheVehicleWasAlredyRegistredByUser(licensePlate, user);
     if (isVehicleFound) {
       throw new DuplicatedException(new FieldError(this.getClass().getSimpleName(), "vehicle",
-          VEHICLE_LICENSE_PLATE_ALREADY_EXISTS.formatted(vehicle.getLicensePlate())));
+          VEHICLE_LICENSE_PLATE_ALREADY_EXISTS.formatted(licensePlate)));
     }
   }
 
-  private boolean checkIfTheVehicleWasAlredyRegistredByUser(Vehicle vehicle, User user) {
-    return user != null && user.userHas(vehicle);
+  private boolean checkIfTheVehicleWasAlredyRegistredByUser(String licensePlate, User user) {
+    return user != null && user.userHasVehicleWithLicensePlate(licensePlate);
   }
 
 }

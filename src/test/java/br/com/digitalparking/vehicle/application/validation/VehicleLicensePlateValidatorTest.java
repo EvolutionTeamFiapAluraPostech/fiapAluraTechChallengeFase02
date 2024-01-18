@@ -31,7 +31,7 @@ class VehicleLicensePlateValidatorTest {
     user.setVehicles(Collections.emptyList());
     when(userFromSecurityContext.getUser()).thenReturn(user);
 
-    assertDoesNotThrow(() -> vehicleLicensePlateValidator.validate(vehicle));
+    assertDoesNotThrow(() -> vehicleLicensePlateValidator.validate(vehicle.getLicensePlate()));
   }
 
   @Test
@@ -41,7 +41,7 @@ class VehicleLicensePlateValidatorTest {
     user.setVehicles(List.of(vehicle));
     when(userFromSecurityContext.getUser()).thenReturn(user);
 
-    assertThrows(DuplicatedException.class, () -> vehicleLicensePlateValidator.validate(vehicle));
+    assertThrows(DuplicatedException.class, () -> vehicleLicensePlateValidator.validate(vehicle.getLicensePlate()));
   }
 
 }

@@ -25,9 +25,11 @@ public class GetVehicleByIdAndUserUseCase {
     uuidValidator.validate(uuid);
     var vehicle = vehicleService.findVehicleByIdRequired(UUID.fromString(uuid));
 
+    if (vehicle != null) {
     var user = userFromSecurityContext.getUser();
-    if (user.userHas(vehicle)) {
-      return vehicle;
+      if (user.userHasVehicleWithLicensePlate(vehicle.getLicensePlate())) {
+        return vehicle;
+      }
     }
     return null;
   }

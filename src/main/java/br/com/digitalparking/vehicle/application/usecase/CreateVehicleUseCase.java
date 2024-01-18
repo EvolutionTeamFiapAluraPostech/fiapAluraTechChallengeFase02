@@ -27,7 +27,7 @@ public class CreateVehicleUseCase {
 
   @Transactional
   public Vehicle execute(Vehicle vehicle){
-    vehicleLicensePlateValidator.validate(vehicle);
+    vehicleLicensePlateValidator.validate(vehicle.getLicensePlate());
     var vehicleSaved = vehicleService.save(vehicle);
     var user = userFromSecurityContext.getUser();
     user.add(vehicleSaved);

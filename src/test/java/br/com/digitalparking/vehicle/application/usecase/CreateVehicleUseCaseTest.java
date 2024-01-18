@@ -45,7 +45,7 @@ class CreateVehicleUseCaseTest {
     assertThat(vehicleSaved.getDescription()).isEqualTo(vehicle.getDescription());
     assertThat(vehicleSaved.getLicensePlate()).isEqualTo(vehicle.getLicensePlate());
     assertThat(vehicleSaved.getColor()).isEqualTo(vehicle.getColor());
-    verify(vehicleLicensePlateValidator).validate(vehicle);
+    verify(vehicleLicensePlateValidator).validate(vehicle.getLicensePlate());
     verify(vehicleService).save(vehicle);
     verify(userService).save(user);
   }
