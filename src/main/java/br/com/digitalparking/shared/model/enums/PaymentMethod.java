@@ -6,8 +6,8 @@ import lombok.Getter;
 public enum PaymentMethod {
 
   PIX("Pix"),
-  CARTAO_CREDITO("Cartão de crédito"),
-  CARTAO_DEBITO("Cartão de débito");
+  CREDIT_CARD("Credit Card"),
+  DEBIT_CARD("Debit Card");
 
   private final String description;
 
