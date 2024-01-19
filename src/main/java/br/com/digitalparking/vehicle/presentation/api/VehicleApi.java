@@ -1,12 +1,14 @@
 package br.com.digitalparking.vehicle.presentation.api;
 
 import br.com.digitalparking.vehicle.application.usecase.CreateVehicleUseCase;
+import br.com.digitalparking.vehicle.application.usecase.DeleteVehicleByIdUseCase;
 import br.com.digitalparking.vehicle.application.usecase.GetVehicleByIdAndUserUseCase;
 import br.com.digitalparking.vehicle.application.usecase.UpdateVehicleUseCase;
 import br.com.digitalparking.vehicle.presentation.dto.VehicleInputDto;
 import br.com.digitalparking.vehicle.presentation.dto.VehicleOutputDto;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,13 +25,15 @@ public class VehicleApi {
   private final CreateVehicleUseCase createVehicleUseCase;
   private final GetVehicleByIdAndUserUseCase getVehicleByIdAndUserUseCase;
   private final UpdateVehicleUseCase updateVehicleUseCase;
+  private final DeleteVehicleByIdUseCase deleteVehicleByIdUseCase;
 
   public VehicleApi(CreateVehicleUseCase createVehicleUseCase,
       GetVehicleByIdAndUserUseCase getVehicleByIdAndUserUseCase,
-      UpdateVehicleUseCase updateVehicleUseCase) {
+      UpdateVehicleUseCase updateVehicleUseCase, DeleteVehicleByIdUseCase deleteVehicleByIdUseCase) {
     this.createVehicleUseCase = createVehicleUseCase;
     this.getVehicleByIdAndUserUseCase = getVehicleByIdAndUserUseCase;
     this.updateVehicleUseCase = updateVehicleUseCase;
+    this.deleteVehicleByIdUseCase = deleteVehicleByIdUseCase;
   }
 
   @PostMapping
@@ -54,5 +58,11 @@ public class VehicleApi {
     var vehicle = VehicleInputDto.toVehicle(vehicleInputDto);
     var vehicleUpdated = updateVehicleUseCase.execute(vehicleUuid, vehicle);
     return VehicleOutputDto.from(vehicleUpdated);
+  }
+
+  @DeleteMapping("/{vehicleUuid}")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public void deleteVehicle(@PathVariable String vehicleUuid) {
+    deleteVehicleByIdUseCase.execute(vehicleUuid);
   }
 }
