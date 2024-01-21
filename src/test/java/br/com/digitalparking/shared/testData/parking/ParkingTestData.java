@@ -2,20 +2,23 @@ package br.com.digitalparking.shared.testData.parking;
 
 import static br.com.digitalparking.parking.model.enums.ParkingState.CLOSED;
 import static br.com.digitalparking.parking.model.enums.ParkingType.FIXED;
-import static br.com.digitalparking.shared.testData.user.UserTestData.DEFAULT_USER_UUID_FROM_STRING;
 import static br.com.digitalparking.shared.testData.user.UserTestData.createUser;
-import static br.com.digitalparking.shared.testData.vehicle.VehicleTestData.DEFAULT_VEHICLE_UUID_STRING;
 import static br.com.digitalparking.shared.testData.vehicle.VehicleTestData.createVehicle;
 
 import br.com.digitalparking.parking.model.entity.Parking;
 import br.com.digitalparking.parking.model.enums.ParkingState;
 import br.com.digitalparking.parking.model.enums.ParkingTime;
 import br.com.digitalparking.parking.model.enums.ParkingType;
+import br.com.digitalparking.user.model.entity.User;
+import br.com.digitalparking.vehicle.model.entity.Vehicle;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 public final class ParkingTestData {
 
+  public static final UUID DEFAULT_PARKING_UUID = UUID.randomUUID();
+  public static final String DEFAULT_PARKING_UUID_STRING = DEFAULT_PARKING_UUID.toString();
   public static final String DEFAULT_PARKING_LATITUDE = "-23.56404";
   public static final String DEFAULT_PARKING_LONGITUDE = "-46.65219";
   public static final String DEFAULT_PARKING_STREET = "Av Paulista, n. 1000";
@@ -33,15 +36,13 @@ public final class ParkingTestData {
       "parkingTime": "%s"}
       """;
 
-  public static final String PARKING_INPUT = PARKING_TEMPLATE_INPUT.formatted(
-      DEFAULT_VEHICLE_UUID_STRING, DEFAULT_USER_UUID_FROM_STRING, DEFAULT_PARKING_LATITUDE,
-      DEFAULT_PARKING_LONGITUDE, DEFAULT_PARKING_STREET, DEFAULT_PARKING_NEIGHBORHOOD,
-      DEFAULT_PARKING_CITY, DEFAULT_PARKING_STATE, DEFAULT_PARKING_COUNTRY,
-      DEFAULT_PARKING_TYPE.name(), DEFAULT_PARKING_TIME);
-
   public static Parking createNewParking() {
     var vehicle = createVehicle();
     var user = createUser();
+    return createNewParkingWith(user, vehicle);
+  }
+
+  public static Parking createNewParkingWith(User user, Vehicle vehicle) {
     var initialParking = LocalDateTime.now();
     var parkingTime = ParkingTime.valueOfDescription(DEFAULT_PARKING_TIME);
     var finalParking = initialParking.plusHours(parkingTime.getHour());
@@ -61,5 +62,11 @@ public final class ParkingTestData {
         .finalParking(finalParking)
         .parkingState(DEFAULT_PARKING_PARKING_STATE)
         .build();
+  }
+
+  public static Parking createParking() {
+    var parking = createNewParking();
+    parking.setId(UUID.randomUUID());
+    return parking;
   }
 }
