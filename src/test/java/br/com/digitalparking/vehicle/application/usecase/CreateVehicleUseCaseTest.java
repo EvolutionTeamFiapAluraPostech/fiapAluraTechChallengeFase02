@@ -1,7 +1,7 @@
 package br.com.digitalparking.vehicle.application.usecase;
 
 import static br.com.digitalparking.shared.testData.user.UserTestData.createUser;
-import static br.com.digitalparking.shared.testData.user.VehicleTestData.createNewVehicle;
+import static br.com.digitalparking.shared.testData.vehicle.VehicleTestData.createNewVehicle;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.Mockito.verify;

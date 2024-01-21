@@ -1,7 +1,7 @@
 package br.com.digitalparking.vehicle.model.service;
 
-import static br.com.digitalparking.shared.testData.user.VehicleTestData.createNewVehicle;
-import static br.com.digitalparking.shared.testData.user.VehicleTestData.createVehicle;
+import static br.com.digitalparking.shared.testData.vehicle.VehicleTestData.createNewVehicle;
+import static br.com.digitalparking.shared.testData.vehicle.VehicleTestData.createVehicle;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;

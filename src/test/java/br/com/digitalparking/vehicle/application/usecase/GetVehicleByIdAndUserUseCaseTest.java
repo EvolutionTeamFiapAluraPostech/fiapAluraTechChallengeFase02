@@ -1,9 +1,9 @@
 package br.com.digitalparking.vehicle.application.usecase;
 
 import static br.com.digitalparking.shared.testData.user.UserTestData.createUser;
-import static br.com.digitalparking.shared.testData.user.VehicleTestData.DEFAULT_VEHICLE_UUID;
-import static br.com.digitalparking.shared.testData.user.VehicleTestData.DEFAULT_VEHICLE_UUID_STRING;
-import static br.com.digitalparking.shared.testData.user.VehicleTestData.createVehicle;
+import static br.com.digitalparking.shared.testData.vehicle.VehicleTestData.DEFAULT_VEHICLE_UUID;
+import static br.com.digitalparking.shared.testData.vehicle.VehicleTestData.DEFAULT_VEHICLE_UUID_STRING;
+import static br.com.digitalparking.shared.testData.vehicle.VehicleTestData.createVehicle;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;

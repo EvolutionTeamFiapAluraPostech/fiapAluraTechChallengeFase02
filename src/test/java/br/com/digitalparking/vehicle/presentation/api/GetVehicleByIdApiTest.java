@@ -11,7 +11,7 @@ import br.com.digitalparking.shared.annotation.DatabaseTest;
 import br.com.digitalparking.shared.annotation.IntegrationTest;
 import br.com.digitalparking.shared.api.JsonUtil;
 import br.com.digitalparking.shared.infrastructure.TestAuthentication;
-import br.com.digitalparking.shared.testData.user.VehicleTestData;
+import br.com.digitalparking.shared.testData.vehicle.VehicleTestData;
 import br.com.digitalparking.user.model.entity.User;
 import br.com.digitalparking.vehicle.model.entity.Vehicle;
 import br.com.digitalparking.vehicle.presentation.dto.VehicleOutputDto;

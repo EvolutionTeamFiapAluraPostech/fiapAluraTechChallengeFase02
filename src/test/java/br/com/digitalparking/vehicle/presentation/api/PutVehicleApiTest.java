@@ -1,11 +1,11 @@
 package br.com.digitalparking.vehicle.presentation.api;
 
 import static br.com.digitalparking.shared.testData.user.UserTestData.createNewUser;
-import static br.com.digitalparking.shared.testData.user.VehicleTestData.ALTERNATIVE_VEHICLE_COLOR;
-import static br.com.digitalparking.shared.testData.user.VehicleTestData.ALTERNATIVE_VEHICLE_DESCRIPTION;
-import static br.com.digitalparking.shared.testData.user.VehicleTestData.ALTERNATIVE_VEHICLE_LICENSE_PLATE;
-import static br.com.digitalparking.shared.testData.user.VehicleTestData.VEHICLE_INPUT_TO_UPDATE;
-import static br.com.digitalparking.shared.testData.user.VehicleTestData.createVehicle;
+import static br.com.digitalparking.shared.testData.vehicle.VehicleTestData.ALTERNATIVE_VEHICLE_COLOR;
+import static br.com.digitalparking.shared.testData.vehicle.VehicleTestData.ALTERNATIVE_VEHICLE_DESCRIPTION;
+import static br.com.digitalparking.shared.testData.vehicle.VehicleTestData.ALTERNATIVE_VEHICLE_LICENSE_PLATE;
+import static br.com.digitalparking.shared.testData.vehicle.VehicleTestData.VEHICLE_INPUT_TO_UPDATE;
+import static br.com.digitalparking.shared.testData.vehicle.VehicleTestData.createVehicle;
 import static br.com.digitalparking.shared.util.IsUUID.isUUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.MediaType.APPLICATION_JSON;

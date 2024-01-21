@@ -1,4 +1,4 @@
-package br.com.digitalparking.shared.testData.user;
+package br.com.digitalparking.shared.testData.vehicle;
 
 import br.com.digitalparking.vehicle.model.entity.Vehicle;
 import java.util.UUID;

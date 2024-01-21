@@ -1,11 +1,11 @@
 package br.com.digitalparking.vehicle.presentation.api;
 
-import static br.com.digitalparking.shared.testData.user.UserTestData.createUser;
-import static br.com.digitalparking.shared.testData.user.VehicleTestData.DEFAULT_VEHICLE_COLOR;
-import static br.com.digitalparking.shared.testData.user.VehicleTestData.DEFAULT_VEHICLE_DESCRIPTION;
-import static br.com.digitalparking.shared.testData.user.VehicleTestData.DEFAULT_VEHICLE_LICENSE_PLATE;
-import static br.com.digitalparking.shared.testData.user.VehicleTestData.VEHICLE_INPUT;
-import static br.com.digitalparking.shared.testData.user.VehicleTestData.VEHICLE_TEMPLATE_INPUT;
+import static br.com.digitalparking.shared.testData.user.UserTestData.createNewUser;
+import static br.com.digitalparking.shared.testData.vehicle.VehicleTestData.DEFAULT_VEHICLE_COLOR;
+import static br.com.digitalparking.shared.testData.vehicle.VehicleTestData.DEFAULT_VEHICLE_DESCRIPTION;
+import static br.com.digitalparking.shared.testData.vehicle.VehicleTestData.DEFAULT_VEHICLE_LICENSE_PLATE;
+import static br.com.digitalparking.shared.testData.vehicle.VehicleTestData.VEHICLE_INPUT;
+import static br.com.digitalparking.shared.testData.vehicle.VehicleTestData.VEHICLE_TEMPLATE_INPUT;
 import static br.com.digitalparking.shared.util.IsUUID.isUUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -18,6 +18,7 @@ import br.com.digitalparking.shared.annotation.DatabaseTest;
 import br.com.digitalparking.shared.annotation.IntegrationTest;
 import br.com.digitalparking.shared.infrastructure.TestAuthentication;
 import br.com.digitalparking.shared.util.StringUtil;
+import br.com.digitalparking.user.model.entity.User;
 import br.com.digitalparking.vehicle.model.entity.Vehicle;
 import com.jayway.jsonpath.JsonPath;
 import jakarta.persistence.EntityManager;
@@ -43,9 +44,14 @@ class PostVehicleApiTest {
     this.testAuthentication = testAuthentication;
   }
 
+  private User createAndPersistUser() {
+    var user = createNewUser();
+    return entityManager.merge(user);
+  }
+
   @Test
   void shouldCreateVehicle() throws Exception {
-    var user = createUser();
+    var user = createAndPersistUser();
 
     var request = post(URL_VEHICLES)
         .contentType(APPLICATION_JSON)
@@ -69,7 +75,7 @@ class PostVehicleApiTest {
 
   @Test
   void shouldReturnBadRequestWhenVehicleDescriptionWasNotFilled() throws Exception {
-    var user = createUser();
+    var user = createAndPersistUser();
 
     var vehicle = Vehicle.builder()
         .description("")
@@ -89,7 +95,7 @@ class PostVehicleApiTest {
 
   @Test
   void shouldReturnBadRequestWhenVehicleDescriptionLengthIsGreaterThan500Characters() throws Exception {
-    var user = createUser();
+    var user = createAndPersistUser();
     var vehicleDescription = StringUtil.generateStringLength(501);
 
     var vehicle = Vehicle.builder()
@@ -110,7 +116,7 @@ class PostVehicleApiTest {
 
   @Test
   void shouldReturnBadRequestWhenVehicleLicensePlateWasNotFilled() throws Exception {
-    var user = createUser();
+    var user = createAndPersistUser();
 
     var vehicle = Vehicle.builder()
         .description(DEFAULT_VEHICLE_DESCRIPTION)
@@ -130,7 +136,7 @@ class PostVehicleApiTest {
 
   @Test
   void shouldReturnBadRequestWhenVehicleLicensePlateLengthIsGreaterThan10Characters() throws Exception {
-    var user = createUser();
+    var user = createAndPersistUser();
     var vehicleLicensePlate = StringUtil.generateStringLength(20);
 
     var vehicle = Vehicle.builder()
@@ -151,7 +157,7 @@ class PostVehicleApiTest {
 
   @Test
   void shouldReturnBadRequestWhenVehicleColorWasNotFilled() throws Exception {
-    var user = createUser();
+    var user = createAndPersistUser();
 
     var vehicle = Vehicle.builder()
         .description(DEFAULT_VEHICLE_DESCRIPTION)
@@ -171,7 +177,7 @@ class PostVehicleApiTest {
 
   @Test
   void shouldReturnBadRequestWhenVehicleColorLengthIsGreaterThan50Characters() throws Exception {
-    var user = createUser();
+    var user = createAndPersistUser();
     var vehicleColor = StringUtil.generateStringLength(51);
 
     var vehicle = Vehicle.builder()
@@ -192,12 +198,14 @@ class PostVehicleApiTest {
 
   @Test
   void shouldReturnConflictWhenVehicleWasAlreadyRegistered() throws Exception {
-    var user = createUser();
     var vehicle = Vehicle.builder()
         .description(DEFAULT_VEHICLE_DESCRIPTION)
         .licensePlate(DEFAULT_VEHICLE_LICENSE_PLATE)
         .color(DEFAULT_VEHICLE_COLOR)
         .build();
+    entityManager.persist(vehicle);
+
+    var user = createAndPersistUser();
     user.add(vehicle);
     entityManager.merge(user);
 

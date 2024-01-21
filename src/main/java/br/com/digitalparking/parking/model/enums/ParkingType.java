@@ -1,4 +1,4 @@
-package br.com.digitalparking.shared.model.enums;
+package br.com.digitalparking.parking.model.enums;
 
 import lombok.Getter;
 

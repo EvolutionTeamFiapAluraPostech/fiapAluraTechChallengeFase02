@@ -1,9 +1,9 @@
 package br.com.digitalparking.vehicle.application.validation;
 
 import static br.com.digitalparking.shared.testData.user.UserTestData.createUser;
-import static br.com.digitalparking.shared.testData.user.VehicleTestData.ALTERNATIVE_VEHICLE_UUID_STRING;
-import static br.com.digitalparking.shared.testData.user.VehicleTestData.createNewVehicle;
-import static br.com.digitalparking.shared.testData.user.VehicleTestData.createVehicle;
+import static br.com.digitalparking.shared.testData.vehicle.VehicleTestData.ALTERNATIVE_VEHICLE_UUID_STRING;
+import static br.com.digitalparking.shared.testData.vehicle.VehicleTestData.createNewVehicle;
+import static br.com.digitalparking.shared.testData.vehicle.VehicleTestData.createVehicle;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
