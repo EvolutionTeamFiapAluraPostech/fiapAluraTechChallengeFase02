@@ -29,7 +29,8 @@ public class VehicleApi {
 
   public VehicleApi(CreateVehicleUseCase createVehicleUseCase,
       GetVehicleByIdAndUserUseCase getVehicleByIdAndUserUseCase,
-      UpdateVehicleUseCase updateVehicleUseCase, DeleteVehicleByIdUseCase deleteVehicleByIdUseCase) {
+      UpdateVehicleUseCase updateVehicleUseCase,
+      DeleteVehicleByIdUseCase deleteVehicleByIdUseCase) {
     this.createVehicleUseCase = createVehicleUseCase;
     this.getVehicleByIdAndUserUseCase = getVehicleByIdAndUserUseCase;
     this.updateVehicleUseCase = updateVehicleUseCase;

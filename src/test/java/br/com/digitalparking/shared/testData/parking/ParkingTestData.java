@@ -29,6 +29,14 @@ public final class ParkingTestData {
   public static final ParkingType DEFAULT_PARKING_TYPE = FIXED;
   public static final String DEFAULT_PARKING_TIME = "2-Hours";
   public static final ParkingState DEFAULT_PARKING_PARKING_STATE = CLOSED;
+  public static final String ALTERNATE_PARKING_LATITUDE = "-23.58808";
+  public static final String ALTERNATE_PARKING_LONGITUDE = "-46.63323";
+  public static final String ALTERNATE_PARKING_STREET = "Rua Vergueiro, 3185";
+  public static final String ALTERNATE_PARKING_NEIGHBORHOOD = "Vila Mariana";
+  public static final String ALTERNATE_PARKING_CITY = "São Paulo";
+  public static final String ALTERNATE_PARKING_STATE = "SP";
+  public static final String ALTERNATE_PARKING_COUNTRY = "Brasil";
+
 
   public static final String PARKING_TEMPLATE_INPUT = """
       {"vehicleId": "%s", "userId": "%s", "latitude": "%s", "longitude": "%s", "street": "%s",
