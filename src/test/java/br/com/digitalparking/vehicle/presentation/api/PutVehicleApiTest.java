@@ -25,8 +25,6 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @IntegrationTest
 @DatabaseTest
@@ -61,12 +59,12 @@ class PutVehicleApiTest {
     var vehicle = createAndPersistVehicle();
     var user = createAndPersistUser(vehicle);
 
-    var request = MockMvcRequestBuilders.put(URL_VEHICLES + vehicle.getId())
+    var request = put(URL_VEHICLES + vehicle.getId())
         .contentType(APPLICATION_JSON)
         .content(VEHICLE_INPUT_TO_UPDATE)
         .with(testAuthentication.defineAuthenticatedUser(user));
     var mvcResult = mockMvc.perform(request)
-        .andExpect(MockMvcResultMatchers.status().isAccepted())
+        .andExpect(status().isAccepted())
         .andExpect(content().contentType(APPLICATION_JSON))
         .andExpect(jsonPath("$.id", isUUID()))
         .andReturn();
@@ -101,5 +99,4 @@ class PutVehicleApiTest {
     mockMvc.perform(request)
         .andExpect(status().isBadRequest());
   }
-
 }
