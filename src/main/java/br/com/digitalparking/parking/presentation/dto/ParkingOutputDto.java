@@ -21,8 +21,7 @@ public record ParkingOutputDto(
     String parkingType,
     String parkingTime,
     LocalDateTime initialParking,
-    LocalDateTime finalParking,
-    String paymentMethod) {
+    LocalDateTime finalParking) {
 
   public ParkingOutputDto(Parking parking) {
     this(parking.getId().toString(), VehicleOutputDto.from(parking.getVehicle()),
@@ -34,8 +33,7 @@ public record ParkingOutputDto(
         parking.getParkingTime() > 0 ?
             ParkingTime.valueOfHour(parking.getParkingTime())
             .getDescription() : "",
-        parking.getInitialParking(), parking.getFinalParking(),
-        parking.getPaymentMethod().getDescription());
+        parking.getInitialParking(), parking.getFinalParking());
   }
 
   public static ParkingOutputDto from(Parking parking) {

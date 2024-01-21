@@ -3,7 +3,6 @@ package br.com.digitalparking.parking.presentation.dto;
 import br.com.digitalparking.parking.model.entity.Parking;
 import br.com.digitalparking.parking.model.enums.ParkingTime;
 import br.com.digitalparking.parking.model.enums.ParkingType;
-import br.com.digitalparking.shared.model.enums.PaymentMethod;
 import br.com.digitalparking.user.model.entity.User;
 import br.com.digitalparking.vehicle.model.entity.Vehicle;
 import jakarta.validation.constraints.NotBlank;
@@ -30,9 +29,7 @@ public record ParkingInputDto(
     String country,
     @NotBlank
     String parkingType,
-    String parkingTime,
-    @NotBlank
-    String paymentMethod) {
+    String parkingTime) {
 
   public static Parking to(ParkingInputDto parkingInputDto) {
     var vehicle = Vehicle.builder().id(UUID.fromString(parkingInputDto.vehicleId)).build();
@@ -59,7 +56,6 @@ public record ParkingInputDto(
         .country(parkingInputDto.country)
         .parkingType(ParkingType.valueOf(parkingInputDto.parkingType))
         .parkingTime(hour)
-        .paymentMethod(PaymentMethod.valueOf(parkingInputDto.paymentMethod))
         .build();
   }
 }

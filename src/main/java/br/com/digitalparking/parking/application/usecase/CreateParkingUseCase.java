@@ -2,6 +2,7 @@ package br.com.digitalparking.parking.application.usecase;
 
 import static br.com.digitalparking.parking.model.enums.ParkingState.OPEN;
 
+import br.com.digitalparking.parking.application.validator.ParkingTimeValidator;
 import br.com.digitalparking.parking.model.entity.Parking;
 import br.com.digitalparking.parking.model.service.ParkingService;
 import br.com.digitalparking.user.infrastructure.security.UserFromSecurityContext;
@@ -17,12 +18,15 @@ public class CreateParkingUseCase {
   private final ParkingService parkingService;
   private final UserFromSecurityContext userFromSecurityContext;
   private final VehicleService vehicleService;
+  private final ParkingTimeValidator parkingTimeValidator;
 
   public CreateParkingUseCase(ParkingService parkingService,
-      UserFromSecurityContext userFromSecurityContext, VehicleService vehicleService) {
+      UserFromSecurityContext userFromSecurityContext, VehicleService vehicleService,
+      ParkingTimeValidator parkingTimeValidator) {
     this.parkingService = parkingService;
     this.userFromSecurityContext = userFromSecurityContext;
     this.vehicleService = vehicleService;
+    this.parkingTimeValidator = parkingTimeValidator;
   }
 
   @Transactional
@@ -30,6 +34,7 @@ public class CreateParkingUseCase {
     var user = userFromSecurityContext.getUser();
     var vehicle = vehicleService.findVehicleByIdRequired(parking.getVehicle().getId());
     updateAttributesToSave(parking, user, vehicle);
+    parkingTimeValidator.validate(parking);
     return parkingService.save(parking);
   }
 

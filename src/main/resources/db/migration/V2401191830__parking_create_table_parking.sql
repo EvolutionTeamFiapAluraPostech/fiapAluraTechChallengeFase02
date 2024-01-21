@@ -25,7 +25,6 @@ create table if not exists "parking_management"."parking"
     "parking_time"          int                         null,
     "initial_parking"       timestamp                   not null,
     "final_parking"         timestamp                   null,
-    "payment_method"        varchar(20)                 not null,
     "parking_payment_id"    uuid                        null
     );
 

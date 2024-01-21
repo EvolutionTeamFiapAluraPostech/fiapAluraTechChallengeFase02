@@ -7,6 +7,7 @@ create table if not exists "parking_management"."parking_payment"
     "created_by"            varchar(255)                null,
     "updated_at"            timestamp without time zone null,
     "updated_by"            varchar(255)                null,
+    "payment_method"        varchar(20)                 not null,
     "payment_state"         varchar(20)                 not null,
     "payment_value"         numeric(10,2)               not null
 );

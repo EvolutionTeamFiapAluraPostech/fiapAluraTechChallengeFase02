@@ -8,9 +8,9 @@ public enum ParkingType {
   FIXED("Hour fixed"),
   FREE("Free time");
 
-  private final String parkingType;
+  private final String description;
 
-  ParkingType(String parkingType) {
-    this.parkingType = parkingType;
+  ParkingType(String description) {
+    this.description = description;
   }
 }

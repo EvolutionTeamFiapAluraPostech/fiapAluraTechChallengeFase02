@@ -5,8 +5,10 @@ import static br.com.digitalparking.shared.testData.user.UserTestData.createUser
 import static br.com.digitalparking.shared.testData.vehicle.VehicleTestData.createVehicle;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import br.com.digitalparking.parking.application.validator.ParkingTimeValidator;
 import br.com.digitalparking.parking.model.service.ParkingService;
 import br.com.digitalparking.user.infrastructure.security.UserFromSecurityContext;
 import br.com.digitalparking.vehicle.model.service.VehicleService;
@@ -24,6 +26,8 @@ class CreateParkingUseCaseTest {
   private UserFromSecurityContext userFromSecurityContext;
   @Mock
   private VehicleService vehicleService;
+  @Mock
+  private ParkingTimeValidator parkingTimeValidator;
   @InjectMocks
   private CreateParkingUseCase createParkingUseCase;
 
@@ -40,5 +44,6 @@ class CreateParkingUseCaseTest {
 
     assertThat(parkingSaved).isNotNull();
     assertThat(parkingSaved).usingRecursiveComparison().isEqualTo(parking);
+    verify(parkingTimeValidator).validate(parking);
   }
 }

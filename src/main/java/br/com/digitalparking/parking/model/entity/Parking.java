@@ -3,7 +3,6 @@ package br.com.digitalparking.parking.model.entity;
 import br.com.digitalparking.parking.model.enums.ParkingState;
 import br.com.digitalparking.parking.model.enums.ParkingType;
 import br.com.digitalparking.shared.model.entity.BaseEntity;
-import br.com.digitalparking.shared.model.enums.PaymentMethod;
 import br.com.digitalparking.user.model.entity.User;
 import br.com.digitalparking.vehicle.model.entity.Vehicle;
 import jakarta.persistence.Entity;
@@ -54,6 +53,10 @@ public class Parking extends BaseEntity {
   private LocalDateTime initialParking;
   private LocalDateTime finalParking;
 
-  @Enumerated(EnumType.STRING)
-  private PaymentMethod paymentMethod;
+  public Boolean isParkingTimeValidForParkingType() {
+    if (ParkingType.FIXED.equals(this.getParkingType())) {
+      return this.getParkingTime() != null && this.getParkingTime() > 0;
+    }
+    return this.getParkingTime() != null && this.getParkingTime() >= 0;
+  }
 }
