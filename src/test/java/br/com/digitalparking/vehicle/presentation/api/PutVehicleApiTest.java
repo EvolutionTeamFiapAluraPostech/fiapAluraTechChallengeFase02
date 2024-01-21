@@ -79,7 +79,7 @@ class PutVehicleApiTest {
   }
 
   @Test
-  void shouldReturnBadRequestWhenVehicleWasNotFoundToUpdate() throws Exception {
+  void shouldReturnNotFoundWhenVehicleWasNotFoundToUpdate() throws Exception {
     var vehicleUuid = UUID.randomUUID();
 
     var request = put(URL_VEHICLES + vehicleUuid)
