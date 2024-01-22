@@ -7,8 +7,6 @@ import static br.com.digitalparking.shared.testData.parking.ParkingTestData.DEFA
 import static br.com.digitalparking.shared.testData.parking.ParkingTestData.DEFAULT_PARKING_NEIGHBORHOOD;
 import static br.com.digitalparking.shared.testData.parking.ParkingTestData.DEFAULT_PARKING_STATE;
 import static br.com.digitalparking.shared.testData.parking.ParkingTestData.DEFAULT_PARKING_STREET;
-import static br.com.digitalparking.shared.testData.parking.ParkingTestData.DEFAULT_PARKING_TIME;
-import static br.com.digitalparking.shared.testData.parking.ParkingTestData.DEFAULT_PARKING_TYPE;
 import static br.com.digitalparking.shared.testData.parking.ParkingTestData.PARKING_TEMPLATE_INPUT;
 import static br.com.digitalparking.shared.testData.user.UserTestData.createNewUser;
 import static br.com.digitalparking.shared.testData.vehicle.VehicleTestData.createNewVehicle;
@@ -22,6 +20,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import br.com.digitalparking.parking.model.entity.Parking;
+import br.com.digitalparking.parking.model.enums.ParkingTime;
+import br.com.digitalparking.parking.model.enums.ParkingType;
 import br.com.digitalparking.shared.annotation.DatabaseTest;
 import br.com.digitalparking.shared.annotation.IntegrationTest;
 import br.com.digitalparking.shared.infrastructure.TestAuthentication;
@@ -68,27 +68,44 @@ class PostParkingApiTest {
     return entityManager.merge(vehicle);
   }
 
-  private String createParkingInput(User user, Vehicle vehicle) {
+  private String createParkingInput(User user, Vehicle vehicle, ParkingType parkingType,
+      ParkingTime parkingTime) {
     return PARKING_TEMPLATE_INPUT.formatted(
         vehicle.getId().toString(), user.getId().toString(), DEFAULT_PARKING_LATITUDE,
         DEFAULT_PARKING_LONGITUDE, DEFAULT_PARKING_STREET, DEFAULT_PARKING_NEIGHBORHOOD,
         DEFAULT_PARKING_CITY, DEFAULT_PARKING_STATE, DEFAULT_PARKING_COUNTRY,
-        DEFAULT_PARKING_TYPE.name(), DEFAULT_PARKING_TIME);
-  }
-
-  private String createParkingInputWithParkingTypeFixedAndHourZero(User user, Vehicle vehicle) {
-    return PARKING_TEMPLATE_INPUT.formatted(
-        vehicle.getId().toString(), user.getId().toString(), DEFAULT_PARKING_LATITUDE,
-        DEFAULT_PARKING_LONGITUDE, DEFAULT_PARKING_STREET, DEFAULT_PARKING_NEIGHBORHOOD,
-        DEFAULT_PARKING_CITY, DEFAULT_PARKING_STATE, DEFAULT_PARKING_COUNTRY,
-        DEFAULT_PARKING_TYPE.name(), "");
+        parkingType.name(), parkingTime.getDescription());
   }
 
   @Test
-  void shouldCreateParkingWhenAllParkingAttributesAreCorrect() throws Exception {
+  void shouldCreateParkingWhenAllParkingAttributesAreCorrectAndParkingTypeIsFixed()
+      throws Exception {
     var user = createUserWithVehicle();
     var vehicle = user.getVehicles().get(0);
-    var parkingInput = createParkingInput(user, vehicle);
+    var parkingInput = createParkingInput(user, vehicle, ParkingType.FIXED, ParkingTime.ONE);
+
+    var request = post(URL_PARKING)
+        .contentType(APPLICATION_JSON)
+        .content(parkingInput)
+        .with(testAuthentication.defineAuthenticatedUser(user));
+    var mvcResult = mockMvc.perform(request)
+        .andExpect(status().isCreated())
+        .andExpect(content().contentType(APPLICATION_JSON))
+        .andExpect(jsonPath("$.id", isUUID()))
+        .andReturn();
+
+    var contentAsString = mvcResult.getResponse().getContentAsString();
+    var id = JsonPath.parse(contentAsString).read("$.id").toString();
+    var parkingFound = entityManager.find(Parking.class, UUID.fromString(id));
+    assertThat(parkingFound).isNotNull();
+  }
+
+  @Test
+  void shouldCreateParkingWhenAllParkingAttributesAreCorrectAndParkingTypeIsFree()
+      throws Exception {
+    var user = createUserWithVehicle();
+    var vehicle = user.getVehicles().get(0);
+    var parkingInput = createParkingInput(user, vehicle, ParkingType.FLEX, ParkingTime.ONE);
 
     var request = post(URL_PARKING)
         .contentType(APPLICATION_JSON)
@@ -110,7 +127,7 @@ class PostParkingApiTest {
   void shouldReturnNotFoundWhenParkingUserWasNotFound() throws Exception {
     var user = createUserWithVehicle();
     var vehicle = createVehicle();
-    var parkingInput = createParkingInput(user, vehicle);
+    var parkingInput = createParkingInput(user, vehicle, ParkingType.FIXED, ParkingTime.ONE);
 
     var request = post(URL_PARKING)
         .contentType(APPLICATION_JSON)
@@ -124,7 +141,7 @@ class PostParkingApiTest {
   void shouldReturnNotFoundWhenParkingUserVehicleWasNotFound() throws Exception {
     var user = createUserWithoutVehicle();
     var vehicle = createVehicle();
-    var parkingInput = createParkingInput(user, vehicle);
+    var parkingInput = createParkingInput(user, vehicle, ParkingType.FIXED, ParkingTime.ONE);
 
     var request = post(URL_PARKING)
         .contentType(APPLICATION_JSON)
@@ -138,7 +155,7 @@ class PostParkingApiTest {
   void shouldReturnBadRequestWhenParkingTimeIsFixedAndHourExpectedIsZero() throws Exception {
     var user = createUserWithVehicle();
     var vehicle = user.getVehicles().get(0);
-    var parkingInput = createParkingInputWithParkingTypeFixedAndHourZero(user, vehicle);
+    var parkingInput = createParkingInput(user, vehicle, ParkingType.FIXED, ParkingTime.UNLIMITED);
 
     var request = post(URL_PARKING)
         .contentType(APPLICATION_JSON)

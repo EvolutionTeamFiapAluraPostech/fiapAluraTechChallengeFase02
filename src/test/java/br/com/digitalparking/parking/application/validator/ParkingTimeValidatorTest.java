@@ -1,6 +1,6 @@
 package br.com.digitalparking.parking.application.validator;
 
-import static br.com.digitalparking.parking.model.enums.ParkingType.FREE;
+import static br.com.digitalparking.parking.model.enums.ParkingType.FLEX;
 import static br.com.digitalparking.shared.testData.parking.ParkingTestData.createNewParking;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -45,7 +45,7 @@ class ParkingTimeValidatorTest {
   @Test
   void shouldValidateParkingTimeWhenParkingTypeIsFreexAndParkingTimeIsEqualToZero() {
     var parking = createNewParking();
-    parking.setParkingType(FREE);
+    parking.setParkingType(FLEX);
     parking.setParkingTime(0);
     assertDoesNotThrow(() -> parkingTimeValidator.validate(parking));
   }

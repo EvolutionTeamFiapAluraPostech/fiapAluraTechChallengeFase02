@@ -5,8 +5,8 @@ import lombok.Getter;
 @Getter
 public enum ParkingType {
 
-  FIXED("Hour fixed"),
-  FREE("Free time");
+  FIXED("Fixed hour"),
+  FLEX("Flexible hour");
 
   private final String description;
 

@@ -7,7 +7,8 @@ import lombok.Getter;
 public enum ParkingTime {
 
   ONE("1-Hour", 1),
-  TWO("2-Hours", 2);
+  TWO("2-Hours", 2),
+  UNLIMITED("Unlimited", 0);
 
   private final String description;
   private final Integer hour;
