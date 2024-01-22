@@ -2,13 +2,17 @@ package br.com.digitalparking.shared.testData.parking;
 
 import static br.com.digitalparking.parking.model.enums.ParkingState.CLOSED;
 import static br.com.digitalparking.parking.model.enums.ParkingType.FIXED;
+import static br.com.digitalparking.shared.model.enums.PaymentMethod.CREDIT_CARD;
 import static br.com.digitalparking.shared.testData.user.UserTestData.createUser;
 import static br.com.digitalparking.shared.testData.vehicle.VehicleTestData.createVehicle;
 
 import br.com.digitalparking.parking.model.entity.Parking;
+import br.com.digitalparking.parking.model.entity.ParkingPayment;
 import br.com.digitalparking.parking.model.enums.ParkingState;
 import br.com.digitalparking.parking.model.enums.ParkingTime;
 import br.com.digitalparking.parking.model.enums.ParkingType;
+import br.com.digitalparking.shared.model.enums.PaymentMethod;
+import br.com.digitalparking.shared.model.enums.PaymentState;
 import br.com.digitalparking.user.model.entity.User;
 import br.com.digitalparking.vehicle.model.entity.Vehicle;
 import java.math.BigDecimal;
@@ -29,6 +33,8 @@ public final class ParkingTestData {
   public static final ParkingType DEFAULT_PARKING_TYPE = FIXED;
   public static final String DEFAULT_PARKING_TIME = "2-Hours";
   public static final ParkingState DEFAULT_PARKING_PARKING_STATE = CLOSED;
+  public static final PaymentMethod DEFAULT_PARKING_PAYMENT_METHOD = CREDIT_CARD;
+  public static final BigDecimal DEFAULT_PARKING_PAYMENT_VALUE = new BigDecimal("5.00");
   public static final String ALTERNATE_PARKING_LATITUDE = "-23.58808";
   public static final String ALTERNATE_PARKING_LONGITUDE = "-46.63323";
   public static final String ALTERNATE_PARKING_STREET = "Rua Vergueiro, 3185";
@@ -37,11 +43,14 @@ public final class ParkingTestData {
   public static final String ALTERNATE_PARKING_STATE = "SP";
   public static final String ALTERNATE_PARKING_COUNTRY = "Brasil";
 
-
   public static final String PARKING_TEMPLATE_INPUT = """
       {"vehicleId": "%s", "userId": "%s", "latitude": "%s", "longitude": "%s", "street": "%s",
       "neighborhood": "%s", "city": "%s", "state": "%s", "country": "%s", "parkingType": "%s",
       "parkingTime": "%s"}
+      """;
+
+  public static final String PARKING_PAYMENT_TEMPLATE_INPUT = """
+      {"paymentMethod": "%s", "paymentValue": "%s"}
       """;
 
   public static Parking createNewParking() {
@@ -76,5 +85,21 @@ public final class ParkingTestData {
     var parking = createNewParking();
     parking.setId(UUID.randomUUID());
     return parking;
+  }
+
+  public static Parking createParkingWithPayment() {
+    var parkingPayment = createParkingPayment();
+    var parking = createParking();
+    parking.setParkingPayment(parkingPayment);
+    return parking;
+  }
+
+  public static ParkingPayment createParkingPayment() {
+    return ParkingPayment.builder()
+        .id(UUID.randomUUID())
+        .paymentMethod(CREDIT_CARD)
+        .paymentValue(new BigDecimal("5.00"))
+        .paymentState(PaymentState.PAID)
+        .build();
   }
 }

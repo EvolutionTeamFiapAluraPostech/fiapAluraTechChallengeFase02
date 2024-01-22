@@ -5,11 +5,13 @@ import br.com.digitalparking.parking.model.enums.ParkingType;
 import br.com.digitalparking.shared.model.entity.BaseEntity;
 import br.com.digitalparking.user.model.entity.User;
 import br.com.digitalparking.vehicle.model.entity.Vehicle;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -52,6 +54,11 @@ public class Parking extends BaseEntity {
   private Integer parkingTime;
   private LocalDateTime initialParking;
   private LocalDateTime finalParking;
+
+  @OneToOne(cascade = CascadeType.ALL)
+  @JoinColumn(name = "parking_payment_id", referencedColumnName = "id")
+  private ParkingPayment parkingPayment;
+
 
   public Boolean isParkingTimeValidForParkingType() {
     if (ParkingType.FIXED.equals(this.getParkingType())) {

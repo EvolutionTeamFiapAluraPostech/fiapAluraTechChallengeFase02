@@ -1,18 +1,11 @@
 package br.com.digitalparking.parking.presentation.api;
 
-import static br.com.digitalparking.shared.testData.parking.ParkingTestData.DEFAULT_PARKING_CITY;
-import static br.com.digitalparking.shared.testData.parking.ParkingTestData.DEFAULT_PARKING_COUNTRY;
-import static br.com.digitalparking.shared.testData.parking.ParkingTestData.DEFAULT_PARKING_LATITUDE;
-import static br.com.digitalparking.shared.testData.parking.ParkingTestData.DEFAULT_PARKING_LONGITUDE;
-import static br.com.digitalparking.shared.testData.parking.ParkingTestData.DEFAULT_PARKING_NEIGHBORHOOD;
-import static br.com.digitalparking.shared.testData.parking.ParkingTestData.DEFAULT_PARKING_STATE;
-import static br.com.digitalparking.shared.testData.parking.ParkingTestData.DEFAULT_PARKING_STREET;
-import static br.com.digitalparking.shared.testData.parking.ParkingTestData.DEFAULT_PARKING_TIME;
-import static br.com.digitalparking.shared.testData.parking.ParkingTestData.DEFAULT_PARKING_TYPE;
-import static br.com.digitalparking.shared.testData.parking.ParkingTestData.PARKING_TEMPLATE_INPUT;
+import static br.com.digitalparking.shared.testData.parking.ParkingTestData.DEFAULT_PARKING_PAYMENT_METHOD;
+import static br.com.digitalparking.shared.testData.parking.ParkingTestData.DEFAULT_PARKING_PAYMENT_VALUE;
+import static br.com.digitalparking.shared.testData.parking.ParkingTestData.PARKING_PAYMENT_TEMPLATE_INPUT;
+import static br.com.digitalparking.shared.testData.parking.ParkingTestData.createNewParkingWith;
 import static br.com.digitalparking.shared.testData.user.UserTestData.createNewUser;
 import static br.com.digitalparking.shared.testData.vehicle.VehicleTestData.createNewVehicle;
-import static br.com.digitalparking.shared.testData.vehicle.VehicleTestData.createVehicle;
 import static br.com.digitalparking.shared.util.IsUUID.isUUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -29,6 +22,7 @@ import br.com.digitalparking.user.model.entity.User;
 import br.com.digitalparking.vehicle.model.entity.Vehicle;
 import com.jayway.jsonpath.JsonPath;
 import jakarta.persistence.EntityManager;
+import java.math.BigDecimal;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,15 +30,15 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @IntegrationTest
 @DatabaseTest
-class PostParkingApiTest {
+class PostParkingPaymentApiTest {
 
-  private final String URL_PARKING = "/parking";
+  private final String URL_PARKING = "/parking/";
   private final MockMvc mockMvc;
   private final EntityManager entityManager;
   private final TestAuthentication testAuthentication;
 
   @Autowired
-  PostParkingApiTest(MockMvc mockMvc, EntityManager entityManager,
+  PostParkingPaymentApiTest(MockMvc mockMvc, EntityManager entityManager,
       TestAuthentication testAuthentication) {
     this.mockMvc = mockMvc;
     this.entityManager = entityManager;
@@ -58,39 +52,39 @@ class PostParkingApiTest {
     return entityManager.merge(user);
   }
 
-  private User createUserWithoutVehicle() {
-    var user = createNewUser();
-    return entityManager.merge(user);
-  }
-
   private Vehicle createAndPersistVehicle() {
     var vehicle = createNewVehicle();
     return entityManager.merge(vehicle);
   }
 
-  private String createParkingInput(User user, Vehicle vehicle) {
-    return PARKING_TEMPLATE_INPUT.formatted(
-        vehicle.getId().toString(), user.getId().toString(), DEFAULT_PARKING_LATITUDE,
-        DEFAULT_PARKING_LONGITUDE, DEFAULT_PARKING_STREET, DEFAULT_PARKING_NEIGHBORHOOD,
-        DEFAULT_PARKING_CITY, DEFAULT_PARKING_STATE, DEFAULT_PARKING_COUNTRY,
-        DEFAULT_PARKING_TYPE.name(), DEFAULT_PARKING_TIME);
+  private Parking createAndPersistParking(User user, Vehicle vehicle) {
+    var parking = createNewParkingWith(user, vehicle);
+    return entityManager.merge(parking);
   }
 
-  private String createParkingInputWithParkingTypeFixedAndHourZero(User user, Vehicle vehicle) {
-    return PARKING_TEMPLATE_INPUT.formatted(
-        vehicle.getId().toString(), user.getId().toString(), DEFAULT_PARKING_LATITUDE,
-        DEFAULT_PARKING_LONGITUDE, DEFAULT_PARKING_STREET, DEFAULT_PARKING_NEIGHBORHOOD,
-        DEFAULT_PARKING_CITY, DEFAULT_PARKING_STATE, DEFAULT_PARKING_COUNTRY,
-        DEFAULT_PARKING_TYPE.name(), "");
+  private String createParkingPaymentInput() {
+    return PARKING_PAYMENT_TEMPLATE_INPUT.formatted(
+        DEFAULT_PARKING_PAYMENT_METHOD, DEFAULT_PARKING_PAYMENT_VALUE);
+  }
+
+  private String createParkingPaymentWithoutPaymentMethodInput() {
+    return PARKING_PAYMENT_TEMPLATE_INPUT.formatted(
+        "", DEFAULT_PARKING_PAYMENT_VALUE);
+  }
+
+  private String createParkingPaymentWithPaymentValueZeroInput() {
+    return PARKING_PAYMENT_TEMPLATE_INPUT.formatted(
+        DEFAULT_PARKING_PAYMENT_METHOD, BigDecimal.ZERO);
   }
 
   @Test
-  void shouldCreateParkingWhenAllParkingAttributesAreCorrect() throws Exception {
+  void shouldCreateParkingPayment() throws Exception {
     var user = createUserWithVehicle();
     var vehicle = user.getVehicles().get(0);
-    var parkingInput = createParkingInput(user, vehicle);
+    var parking = createAndPersistParking(user, vehicle);
+    var parkingInput = createParkingPaymentInput();
 
-    var request = post(URL_PARKING)
+    var request = post(URL_PARKING + parking.getId() + "/payment")
         .contentType(APPLICATION_JSON)
         .content(parkingInput)
         .with(testAuthentication.defineAuthenticatedUser(user));
@@ -104,47 +98,50 @@ class PostParkingApiTest {
     var id = JsonPath.parse(contentAsString).read("$.id").toString();
     var parkingFound = entityManager.find(Parking.class, UUID.fromString(id));
     assertThat(parkingFound).isNotNull();
+    assertThat(parkingFound.getParkingPayment()).isNotNull();
+    assertThat(parkingFound.getParkingPayment().getPaymentMethod()).isEqualTo(
+        DEFAULT_PARKING_PAYMENT_METHOD);
+    assertThat(parkingFound.getParkingPayment().getPaymentValue()).isEqualTo(
+        DEFAULT_PARKING_PAYMENT_VALUE);
   }
 
   @Test
-  void shouldReturnNotFoundWhenParkingUserWasNotFound() throws Exception {
+  void shouldReturnNotFoundWhenParkingWasNotFound() throws Exception {
     var user = createUserWithVehicle();
-    var vehicle = createVehicle();
-    var parkingInput = createParkingInput(user, vehicle);
+    var parkingInput = createParkingPaymentInput();
 
-    var request = post(URL_PARKING)
+    var request = post(URL_PARKING + UUID.randomUUID() + "/payment")
         .contentType(APPLICATION_JSON)
         .content(parkingInput)
         .with(testAuthentication.defineAuthenticatedUser(user));
-
     mockMvc.perform(request).andExpect(status().isNotFound());
   }
 
   @Test
-  void shouldReturnNotFoundWhenParkingUserVehicleWasNotFound() throws Exception {
-    var user = createUserWithoutVehicle();
-    var vehicle = createVehicle();
-    var parkingInput = createParkingInput(user, vehicle);
-
-    var request = post(URL_PARKING)
-        .contentType(APPLICATION_JSON)
-        .content(parkingInput)
-        .with(testAuthentication.defineAuthenticatedUser(user));
-
-    mockMvc.perform(request).andExpect(status().isNotFound());
-  }
-
-  @Test
-  void shouldReturnBadRequestWhenParkingTimeIsFixedAndHourExpectedIsZero() throws Exception {
+  void shouldReturnBadRequestWhenParkingPaymentMethodWasNotProvided() throws Exception {
     var user = createUserWithVehicle();
     var vehicle = user.getVehicles().get(0);
-    var parkingInput = createParkingInputWithParkingTypeFixedAndHourZero(user, vehicle);
+    var parking = createAndPersistParking(user, vehicle);
+    var parkingInput = createParkingPaymentWithoutPaymentMethodInput();
 
-    var request = post(URL_PARKING)
+    var request = post(URL_PARKING + parking.getId() + "/payment")
         .contentType(APPLICATION_JSON)
         .content(parkingInput)
         .with(testAuthentication.defineAuthenticatedUser(user));
+    mockMvc.perform(request).andExpect(status().isBadRequest());
+  }
 
+  @Test
+  void shouldReturnBadRequestWhenParkingPaymentValueIsZero() throws Exception {
+    var user = createUserWithVehicle();
+    var vehicle = user.getVehicles().get(0);
+    var parking = createAndPersistParking(user, vehicle);
+    var parkingInput = createParkingPaymentWithPaymentValueZeroInput();
+
+    var request = post(URL_PARKING + parking.getId() + "/payment")
+        .contentType(APPLICATION_JSON)
+        .content(parkingInput)
+        .with(testAuthentication.defineAuthenticatedUser(user));
     mockMvc.perform(request).andExpect(status().isBadRequest());
   }
 }

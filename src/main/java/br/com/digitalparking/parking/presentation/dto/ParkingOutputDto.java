@@ -21,19 +21,24 @@ public record ParkingOutputDto(
     String parkingType,
     String parkingTime,
     LocalDateTime initialParking,
-    LocalDateTime finalParking) {
+    LocalDateTime finalParking,
+    ParkingPaymentOutputDto parkingPaymentOutputDto) {
 
   public ParkingOutputDto(Parking parking) {
-    this(parking.getId().toString(), VehicleOutputDto.from(parking.getVehicle()),
-        UserOutputDto.from(parking.getUser()), parking.getLatitude().toString(),
-        parking.getLongitude().toString(), parking.getStreet(),
-        parking.getNeighborhood(), parking.getCity(),
+    this(parking.getId().toString(),
+        parking.getVehicle() != null ? VehicleOutputDto.from(parking.getVehicle()) : null,
+        parking.getUser() != null ? UserOutputDto.from(parking.getUser()) : null,
+        parking.getLatitude().toString(), parking.getLongitude().toString(),
+        parking.getStreet(), parking.getNeighborhood(), parking.getCity(),
         parking.getState(), parking.getCountry(),
-        parking.getState(), parking.getParkingType().name(),
+        parking.getParkingState() != null ? parking.getParkingState().name() : null,
+        parking.getParkingType() != null ? parking.getParkingType().name() : null,
         parking.getParkingTime() > 0 ?
             ParkingTime.valueOfHour(parking.getParkingTime())
-            .getDescription() : "",
-        parking.getInitialParking(), parking.getFinalParking());
+                .getDescription() : "",
+        parking.getInitialParking(), parking.getFinalParking(),
+        parking.getParkingPayment() != null ? ParkingPaymentOutputDto.from(
+            parking.getParkingPayment()) : null);
   }
 
   public static ParkingOutputDto from(Parking parking) {
