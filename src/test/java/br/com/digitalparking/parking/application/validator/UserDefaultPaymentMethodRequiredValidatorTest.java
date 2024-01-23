@@ -14,10 +14,10 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-class UserDefaultPaymentMethodValidatorTest {
+class UserDefaultPaymentMethodRequiredValidatorTest {
 
   @Spy
-  private UserDefaultPaymentMethodValidator userDefaultPaymentMethodValidator;
+  private UserDefaultPaymentMethodRequiredValidator userDefaultPaymentMethodRequiredValidator;
 
   @Test
   void shouldValidateUserDefaultPaymentMethodIsValid() {
@@ -28,7 +28,7 @@ class UserDefaultPaymentMethodValidatorTest {
         .paymentMethod(PaymentMethod.CREDIT_CARD).build();
     user.setUserPaymentMethod(userPaymentMethod);
 
-    assertDoesNotThrow(() -> userDefaultPaymentMethodValidator.validate(user));
+    assertDoesNotThrow(() -> userDefaultPaymentMethodRequiredValidator.validate(user));
   }
 
   @Test
@@ -36,6 +36,6 @@ class UserDefaultPaymentMethodValidatorTest {
     var user = UserTestData.createUser();
     user.setUserPaymentMethod(null);
 
-    assertThrows(ValidatorException.class, () -> userDefaultPaymentMethodValidator.validate(user));
+    assertThrows(ValidatorException.class, () -> userDefaultPaymentMethodRequiredValidator.validate(user));
   }
 }

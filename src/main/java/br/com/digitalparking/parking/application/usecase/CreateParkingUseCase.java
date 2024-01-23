@@ -3,7 +3,8 @@ package br.com.digitalparking.parking.application.usecase;
 import static br.com.digitalparking.parking.model.enums.ParkingState.BUSY;
 
 import br.com.digitalparking.parking.application.validator.ParkingTimeValidator;
-import br.com.digitalparking.parking.application.validator.UserDefaultPaymentMethodValidator;
+import br.com.digitalparking.parking.application.validator.PaymentMethodPixValidator;
+import br.com.digitalparking.parking.application.validator.UserDefaultPaymentMethodRequiredValidator;
 import br.com.digitalparking.parking.model.entity.Parking;
 import br.com.digitalparking.parking.model.entity.ParkingPayment;
 import br.com.digitalparking.parking.model.service.ParkingService;
@@ -26,25 +27,29 @@ public class CreateParkingUseCase {
   private final UserFromSecurityContext userFromSecurityContext;
   private final VehicleService vehicleService;
   private final ParkingTimeValidator parkingTimeValidator;
-  private final UserDefaultPaymentMethodValidator userDefaultPaymentMethodValidator;
+  private final UserDefaultPaymentMethodRequiredValidator userDefaultPaymentMethodRequiredValidator;
+  private final PaymentMethodPixValidator paymentMethodPixValidator;
 
   public CreateParkingUseCase(ParkingService parkingService,
       UserFromSecurityContext userFromSecurityContext, VehicleService vehicleService,
       ParkingTimeValidator parkingTimeValidator,
-      UserDefaultPaymentMethodValidator userDefaultPaymentMethodValidator) {
+      UserDefaultPaymentMethodRequiredValidator userDefaultPaymentMethodRequiredValidator,
+      PaymentMethodPixValidator paymentMethodPixValidator) {
     this.parkingService = parkingService;
     this.userFromSecurityContext = userFromSecurityContext;
     this.vehicleService = vehicleService;
     this.parkingTimeValidator = parkingTimeValidator;
-    this.userDefaultPaymentMethodValidator = userDefaultPaymentMethodValidator;
+    this.userDefaultPaymentMethodRequiredValidator = userDefaultPaymentMethodRequiredValidator;
+    this.paymentMethodPixValidator = paymentMethodPixValidator;
   }
 
   @Transactional
   public Parking execute(Parking parking) {
     var user = userFromSecurityContext.getUser();
-    userDefaultPaymentMethodValidator.validate(user);
+    userDefaultPaymentMethodRequiredValidator.validate(user);
     var vehicle = vehicleService.findVehicleByIdRequired(parking.getVehicle().getId());
     parkingTimeValidator.validate(parking);
+    paymentMethodPixValidator.validate(parking);
     updateAttributesToSave(parking, user, vehicle);
     return parkingService.save(parking);
   }

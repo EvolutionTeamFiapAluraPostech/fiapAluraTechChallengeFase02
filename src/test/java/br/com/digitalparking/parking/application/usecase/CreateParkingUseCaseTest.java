@@ -9,7 +9,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import br.com.digitalparking.parking.application.validator.ParkingTimeValidator;
-import br.com.digitalparking.parking.application.validator.UserDefaultPaymentMethodValidator;
+import br.com.digitalparking.parking.application.validator.PaymentMethodPixValidator;
+import br.com.digitalparking.parking.application.validator.UserDefaultPaymentMethodRequiredValidator;
 import br.com.digitalparking.parking.model.service.ParkingService;
 import br.com.digitalparking.shared.model.enums.PaymentMethod;
 import br.com.digitalparking.user.infrastructure.security.UserFromSecurityContext;
@@ -34,7 +35,9 @@ class CreateParkingUseCaseTest {
   @Mock
   private ParkingTimeValidator parkingTimeValidator;
   @Mock
-  private UserDefaultPaymentMethodValidator userDefaultPaymentMethodValidator;
+  private UserDefaultPaymentMethodRequiredValidator userDefaultPaymentMethodRequiredValidator;
+  @Mock
+  private PaymentMethodPixValidator paymentMethodPixValidator;
   @InjectMocks
   private CreateParkingUseCase createParkingUseCase;
 
@@ -57,6 +60,7 @@ class CreateParkingUseCaseTest {
     assertThat(parkingSaved).isNotNull();
     assertThat(parkingSaved).usingRecursiveComparison().isEqualTo(parking);
     verify(parkingTimeValidator).validate(parking);
-    verify(userDefaultPaymentMethodValidator).validate(user);
+    verify(userDefaultPaymentMethodRequiredValidator).validate(user);
+    verify(paymentMethodPixValidator).validate(parking);
   }
 }
