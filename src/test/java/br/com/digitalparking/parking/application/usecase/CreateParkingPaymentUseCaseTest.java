@@ -6,6 +6,8 @@ import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import br.com.digitalparking.parking.application.event.ParkingPaymentEvent;
+import br.com.digitalparking.parking.application.event.ParkingPaymentEventPublisher;
 import br.com.digitalparking.parking.model.service.ParkingService;
 import br.com.digitalparking.shared.model.entity.validator.UuidValidator;
 import org.junit.jupiter.api.Test;
@@ -21,6 +23,8 @@ class CreateParkingPaymentUseCaseTest {
   private ParkingService parkingService;
   @Mock
   private UuidValidator uuidValidator;
+  @Mock
+  private ParkingPaymentEventPublisher parkingPaymentEventPublisher;
   @InjectMocks
   private CreateParkingPaymentUseCase createParkingPaymentUseCase;
 
@@ -37,5 +41,6 @@ class CreateParkingPaymentUseCaseTest {
     assertThat(parkingSaved).isNotNull();
     assertThat(parkingSaved).usingRecursiveComparison().isEqualTo(parking);
     verify(uuidValidator).validate(parking.getId().toString());
+    verify(parkingPaymentEventPublisher).publishEvent(new ParkingPaymentEvent(parkingSaved));
   }
 }

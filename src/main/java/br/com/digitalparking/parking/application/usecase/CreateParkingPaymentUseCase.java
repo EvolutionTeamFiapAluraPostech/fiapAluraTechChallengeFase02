@@ -2,6 +2,8 @@ package br.com.digitalparking.parking.application.usecase;
 
 import static br.com.digitalparking.shared.model.enums.PaymentState.PAID;
 
+import br.com.digitalparking.parking.application.event.ParkingPaymentEvent;
+import br.com.digitalparking.parking.application.event.ParkingPaymentEventPublisher;
 import br.com.digitalparking.parking.model.entity.Parking;
 import br.com.digitalparking.parking.model.entity.ParkingPayment;
 import br.com.digitalparking.parking.model.service.ParkingService;
@@ -18,19 +20,29 @@ public class CreateParkingPaymentUseCase {
 
   private final ParkingService parkingService;
   private final UuidValidator uuidValidator;
+  private final ParkingPaymentEventPublisher parkingPaymentEventPublisher;
 
-  public CreateParkingPaymentUseCase(ParkingService parkingService, UuidValidator uuidValidator) {
+  public CreateParkingPaymentUseCase(ParkingService parkingService, UuidValidator uuidValidator,
+      ParkingPaymentEventPublisher parkingPaymentEventPublisher) {
     this.parkingService = parkingService;
     this.uuidValidator = uuidValidator;
+    this.parkingPaymentEventPublisher = parkingPaymentEventPublisher;
   }
 
   @Transactional
   public Parking execute(String uuid, ParkingPayment parkingPayment) {
     uuidValidator.validate(uuid);
-    var parkingSaved = parkingService.findById(UUID.fromString(uuid));
+    var parkingFound = parkingService.findById(UUID.fromString(uuid));
     validatePaymentValue(parkingPayment);
-    var parkingToSave = updatePayment(parkingSaved, parkingPayment);
-    return parkingService.save(parkingToSave);
+    var parkingToSave = updatePayment(parkingFound, parkingPayment);
+    var parkingSaved = parkingService.save(parkingToSave);
+    notifyParkingPayment(parkingSaved);
+    return parkingSaved;
+  }
+
+  private void notifyParkingPayment(Parking parkingSaved) {
+    var parkingPaymentEvent = new ParkingPaymentEvent(parkingSaved);
+    parkingPaymentEventPublisher.publishEvent(parkingPaymentEvent);
   }
 
   private void validatePaymentValue(ParkingPayment parkingPayment) {

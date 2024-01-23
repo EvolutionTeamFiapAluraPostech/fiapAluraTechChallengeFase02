@@ -35,9 +35,10 @@ class ArchUnitTest {
         .layer("Application").definedBy("..application..")
         .layer("Model").definedBy("..model..")
         .layer("Infrastructure").definedBy("..infrastructure..")
-        .whereLayer("Presentation").mayNotBeAccessedByAnyLayer()
-        .whereLayer("Application").mayOnlyBeAccessedByLayers("Presentation")
-        .whereLayer("Model").mayOnlyBeAccessedByLayers("Presentation", "Application", "Infrastructure")
+        .whereLayer("Presentation").mayOnlyBeAccessedByLayers("Infrastructure")
+        .whereLayer("Application").mayOnlyBeAccessedByLayers("Infrastructure", "Presentation")
+        .whereLayer("Model")
+        .mayOnlyBeAccessedByLayers("Presentation", "Application", "Infrastructure")
         .check(mainPackages);
   }
 
@@ -119,6 +120,7 @@ class ArchUnitTest {
         .should(haveEquivalentTestClass(testPackages))
         .check(mainPackages);
   }
+
   @Test
   void shouldServicesHaveEquivalentTestClass() {
     classes().that().haveSimpleNameEndingWith("Service")
