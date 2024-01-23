@@ -24,3 +24,7 @@ api:
   security:
     token:
       secret: ${API_SECURITY_TOKEN_SECRET:Fi@p-@lur@-2ADJT}
+
+base:
+  url:
+    http-payment-notification: http://localhost:8081

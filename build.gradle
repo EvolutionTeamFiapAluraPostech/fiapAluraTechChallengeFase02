@@ -41,7 +41,7 @@ dependencies {
     testImplementation "org.testcontainers:junit-jupiter:${versionTestContainers}"
     testImplementation "org.testcontainers:postgresql:${versionTestContainers}"
     testImplementation "com.tngtech.archunit:archunit:${versionArchUnit}"
-}
+    testImplementation "org.wiremock:wiremock:3.3.1"}
 
 tasks.withType(Test) {
     description = 'Runs the unit tests.'

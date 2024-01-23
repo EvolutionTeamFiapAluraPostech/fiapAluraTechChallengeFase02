@@ -7,6 +7,8 @@ import static br.com.digitalparking.shared.testData.parking.ParkingTestData.crea
 import static br.com.digitalparking.shared.testData.user.UserTestData.createNewUser;
 import static br.com.digitalparking.shared.testData.vehicle.VehicleTestData.createNewVehicle;
 import static br.com.digitalparking.shared.util.IsUUID.isUUID;
+import static com.github.tomakehurst.wiremock.client.WireMock.ok;
+import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -20,6 +22,8 @@ import br.com.digitalparking.shared.annotation.IntegrationTest;
 import br.com.digitalparking.shared.infrastructure.TestAuthentication;
 import br.com.digitalparking.user.model.entity.User;
 import br.com.digitalparking.vehicle.model.entity.Vehicle;
+import com.github.tomakehurst.wiremock.client.WireMock;
+import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import com.jayway.jsonpath.JsonPath;
 import jakarta.persistence.EntityManager;
 import java.math.BigDecimal;
@@ -30,9 +34,10 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @IntegrationTest
 @DatabaseTest
+@WireMockTest(httpPort = 7070)
 class PostParkingPaymentApiTest {
 
-  private final String URL_PARKING = "/parking/";
+  private static final String URL_PARKING = "/parking/";
   private final MockMvc mockMvc;
   private final EntityManager entityManager;
   private final TestAuthentication testAuthentication;
@@ -83,6 +88,7 @@ class PostParkingPaymentApiTest {
     var vehicle = user.getVehicles().get(0);
     var parking = createAndPersistParking(user, vehicle);
     var parkingInput = createParkingPaymentInput();
+    stubFor(WireMock.put("/notifications/" + parking.getId()).willReturn(ok()));
 
     var request = post(URL_PARKING + parking.getId() + "/payment")
         .contentType(APPLICATION_JSON)
