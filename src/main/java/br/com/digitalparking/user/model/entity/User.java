@@ -2,12 +2,14 @@ package br.com.digitalparking.user.model.entity;
 
 import br.com.digitalparking.shared.model.entity.BaseEntity;
 import br.com.digitalparking.vehicle.model.entity.Vehicle;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -54,6 +56,11 @@ public class User extends BaseEntity implements UserDetails {
       joinColumns = @JoinColumn(name = "user_id"),
       inverseJoinColumns = @JoinColumn(name = "vehicle_id"))
   private List<Vehicle> vehicles = new ArrayList<>();
+
+  @OneToOne(cascade = CascadeType.ALL)
+  @JoinColumn(name = "payment_method_id", referencedColumnName = "id")
+  private UserPaymentMethod userPaymentMethod;
+
 
   @Override
   public String getUsername() {

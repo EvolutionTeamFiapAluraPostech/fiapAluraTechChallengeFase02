@@ -69,7 +69,7 @@ class PostParkingPaymentApiTest {
 
   private String createParkingPaymentInput() {
     return PARKING_PAYMENT_TEMPLATE_INPUT.formatted(
-        DEFAULT_PARKING_PAYMENT_METHOD, DEFAULT_PARKING_PAYMENT_VALUE);
+        DEFAULT_PARKING_PAYMENT_METHOD.getDescription(), DEFAULT_PARKING_PAYMENT_VALUE);
   }
 
   private String createParkingPaymentWithoutPaymentMethodInput() {

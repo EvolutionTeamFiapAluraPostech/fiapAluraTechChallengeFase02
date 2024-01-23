@@ -13,10 +13,10 @@ public record ParkingPaymentInputDto(
     BigDecimal paymentValue
 ) {
 
-    public static ParkingPayment to(ParkingPaymentInputDto parkingPaymentInputDto) {
-        return ParkingPayment.builder()
-            .paymentMethod(PaymentMethod.valueOf(parkingPaymentInputDto.paymentMethod))
-            .paymentValue(parkingPaymentInputDto.paymentValue)
-            .build();
-    }
+  public static ParkingPayment to(ParkingPaymentInputDto parkingPaymentInputDto) {
+    return ParkingPayment.builder()
+        .paymentMethod(PaymentMethod.valueOfDescription(parkingPaymentInputDto.paymentMethod))
+        .paymentValue(parkingPaymentInputDto.paymentValue)
+        .build();
+  }
 }
