@@ -25,7 +25,9 @@ import br.com.digitalparking.parking.model.enums.ParkingType;
 import br.com.digitalparking.shared.annotation.DatabaseTest;
 import br.com.digitalparking.shared.annotation.IntegrationTest;
 import br.com.digitalparking.shared.infrastructure.TestAuthentication;
+import br.com.digitalparking.shared.model.enums.PaymentMethod;
 import br.com.digitalparking.user.model.entity.User;
+import br.com.digitalparking.user.model.entity.UserPaymentMethod;
 import br.com.digitalparking.vehicle.model.entity.Vehicle;
 import com.jayway.jsonpath.JsonPath;
 import jakarta.persistence.EntityManager;
@@ -55,12 +57,23 @@ class PostParkingApiTest {
     var vehicle = createAndPersistVehicle();
     var user = createNewUser();
     user.add(vehicle);
+    var paymentMethod = createUserPaymentMethod(user);
+    user.setUserPaymentMethod(paymentMethod);
     return entityManager.merge(user);
   }
 
   private User createUserWithoutVehicle() {
     var user = createNewUser();
+    var paymentMethod = createUserPaymentMethod(user);
+    user.setUserPaymentMethod(paymentMethod);
     return entityManager.merge(user);
+  }
+
+  private UserPaymentMethod createUserPaymentMethod(User user) {
+    return UserPaymentMethod.builder()
+        .user(user)
+        .paymentMethod(PaymentMethod.CREDIT_CARD)
+        .build();
   }
 
   private Vehicle createAndPersistVehicle() {

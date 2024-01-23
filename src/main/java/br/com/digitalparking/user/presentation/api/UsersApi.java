@@ -8,11 +8,13 @@ import br.com.digitalparking.user.application.usecase.GetUserByEmailUseCase;
 import br.com.digitalparking.user.application.usecase.GetUserByIdUseCase;
 import br.com.digitalparking.user.application.usecase.GetUsersByNameOrEmailUseCase;
 import br.com.digitalparking.user.application.usecase.GetUsersByNameUseCase;
+import br.com.digitalparking.user.application.usecase.UpdateUserPaymentMethodUserUseCase;
 import br.com.digitalparking.user.application.usecase.UpdateUserUseCase;
 import br.com.digitalparking.user.presentation.dto.PostUserInputDto;
 import br.com.digitalparking.user.presentation.dto.PutUserInputDto;
 import br.com.digitalparking.user.presentation.dto.UserFilter;
 import br.com.digitalparking.user.presentation.dto.UserOutputDto;
+import br.com.digitalparking.user.presentation.dto.UserPaymentMethodDto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import org.springframework.data.domain.Page;
@@ -21,6 +23,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -42,6 +45,7 @@ public class UsersApi {
   private final UpdateUserUseCase updateUserUseCase;
   private final DeleteUserUseCase deleteUserUseCase;
   private final GetUserByCpfUseCase getUserByCpfUseCase;
+  private final UpdateUserPaymentMethodUserUseCase updateUserPaymentMethodUserUseCase;
 
   public UsersApi(
       CreateUserUseCase createUserUseCase,
@@ -51,7 +55,8 @@ public class UsersApi {
       GetUserByIdUseCase getUserByIdUseCase,
       GetUsersByNameOrEmailUseCase getUsersByNameOrEmailUseCase,
       UpdateUserUseCase updateUserUseCase,
-      DeleteUserUseCase deleteUserUseCase, GetUserByCpfUseCase getUserByCpfUseCase) {
+      DeleteUserUseCase deleteUserUseCase, GetUserByCpfUseCase getUserByCpfUseCase,
+      UpdateUserPaymentMethodUserUseCase updateUserPaymentMethodUserUseCase) {
     this.createUserUseCase = createUserUseCase;
     this.getAllUsersUseCase = getAllUsersUseCase;
     this.getUserByEmailUseCase = getUserByEmailUseCase;
@@ -61,6 +66,7 @@ public class UsersApi {
     this.updateUserUseCase = updateUserUseCase;
     this.deleteUserUseCase = deleteUserUseCase;
     this.getUserByCpfUseCase = getUserByCpfUseCase;
+    this.updateUserPaymentMethodUserUseCase = updateUserPaymentMethodUserUseCase;
   }
 
   @GetMapping
@@ -132,4 +138,12 @@ public class UsersApi {
     return UserOutputDto.from(user);
   }
 
+  @PatchMapping("/{userUuid}")
+  @ResponseStatus(HttpStatus.ACCEPTED)
+  public UserOutputDto patchUserPaymentMethod(@PathVariable String userUuid,
+      @RequestBody UserPaymentMethodDto userPaymentMethodDto) {
+    var paymentMethod = userPaymentMethodDto.paymentMethod();
+    var user = updateUserPaymentMethodUserUseCase.execute(userUuid, paymentMethod);
+    return UserOutputDto.from(user);
+  }
 }

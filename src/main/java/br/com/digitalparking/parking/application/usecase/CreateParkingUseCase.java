@@ -1,12 +1,12 @@
 package br.com.digitalparking.parking.application.usecase;
 
-import static br.com.digitalparking.parking.model.enums.ParkingState.UNAVAILABLE;
+import static br.com.digitalparking.parking.model.enums.ParkingState.BUSY;
 
 import br.com.digitalparking.parking.application.validator.ParkingTimeValidator;
+import br.com.digitalparking.parking.application.validator.UserDefaultPaymentMethodValidator;
 import br.com.digitalparking.parking.model.entity.Parking;
 import br.com.digitalparking.parking.model.entity.ParkingPayment;
 import br.com.digitalparking.parking.model.service.ParkingService;
-import br.com.digitalparking.shared.model.enums.PaymentMethod;
 import br.com.digitalparking.shared.model.enums.PaymentState;
 import br.com.digitalparking.user.infrastructure.security.UserFromSecurityContext;
 import br.com.digitalparking.user.model.entity.User;
@@ -26,19 +26,23 @@ public class CreateParkingUseCase {
   private final UserFromSecurityContext userFromSecurityContext;
   private final VehicleService vehicleService;
   private final ParkingTimeValidator parkingTimeValidator;
+  private final UserDefaultPaymentMethodValidator userDefaultPaymentMethodValidator;
 
   public CreateParkingUseCase(ParkingService parkingService,
       UserFromSecurityContext userFromSecurityContext, VehicleService vehicleService,
-      ParkingTimeValidator parkingTimeValidator) {
+      ParkingTimeValidator parkingTimeValidator,
+      UserDefaultPaymentMethodValidator userDefaultPaymentMethodValidator) {
     this.parkingService = parkingService;
     this.userFromSecurityContext = userFromSecurityContext;
     this.vehicleService = vehicleService;
     this.parkingTimeValidator = parkingTimeValidator;
+    this.userDefaultPaymentMethodValidator = userDefaultPaymentMethodValidator;
   }
 
   @Transactional
   public Parking execute(Parking parking) {
     var user = userFromSecurityContext.getUser();
+    userDefaultPaymentMethodValidator.validate(user);
     var vehicle = vehicleService.findVehicleByIdRequired(parking.getVehicle().getId());
     parkingTimeValidator.validate(parking);
     updateAttributesToSave(parking, user, vehicle);
@@ -48,7 +52,7 @@ public class CreateParkingUseCase {
   private void updateAttributesToSave(Parking parking, User user, Vehicle vehicle) {
     parking.setUser(user);
     parking.setVehicle(vehicle);
-    parking.setParkingState(UNAVAILABLE);
+    parking.setParkingState(BUSY);
     parking.setInitialParking(LocalDateTime.now());
     calculateFinalParkingTime(parking);
     calculateParkingPrice(parking);
@@ -63,10 +67,11 @@ public class CreateParkingUseCase {
   }
 
   private void generateParkingPayment(Parking parking, BigDecimal price) {
+    var userDefaultPaymentMethod = parking.getUser().getUserPaymentMethod();
     var parkingPayment = ParkingPayment.builder()
         .parking(parking)
         .paymentValue(price)
-        .paymentMethod(PaymentMethod.CREDIT_CARD)
+        .paymentMethod(userDefaultPaymentMethod.getPaymentMethod())
         .paymentState(PaymentState.NOT_PAID)
         .build();
     parking.setParkingPayment(parkingPayment);

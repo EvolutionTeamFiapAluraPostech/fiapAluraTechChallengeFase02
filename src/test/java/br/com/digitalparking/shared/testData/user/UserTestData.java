@@ -1,9 +1,11 @@
 package br.com.digitalparking.shared.testData.user;
 
+import br.com.digitalparking.shared.model.enums.PaymentMethod;
 import br.com.digitalparking.user.model.entity.User;
 import java.util.UUID;
 
 public final class UserTestData {
+
   public static final UUID DEFAULT_USER_UUID = UUID.randomUUID();
   public static final String DEFAULT_USER_UUID_FROM_STRING = DEFAULT_USER_UUID.toString();
   public static final String DEFAULT_USER_NAME = "Morpheus";
@@ -36,6 +38,13 @@ public final class UserTestData {
       ALTERNATIVE_USER_NAME,
       ALTERNATIVE_USER_EMAIL,
       ALTERNATIVE_USER_CPF);
+
+  public static final String USER_PAYMENT_METHOD_TEMPLATE_UPDATE = """
+      {"paymentMethod": "%s"}""";
+
+  public static final String USER_PAYMENT_METHOD_UPDATE = USER_PAYMENT_METHOD_TEMPLATE_UPDATE.formatted(
+      PaymentMethod.PIX.getDescription());
+
 
   public static User createUser() {
     var uuid = UUID.randomUUID();

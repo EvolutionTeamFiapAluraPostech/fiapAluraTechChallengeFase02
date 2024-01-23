@@ -12,4 +12,5 @@ public final class UserMessages {
   public static final String USER_PASSWORD_MUST_HAVE_AT_LEAST_ONE_LOWER_CHAR = "Password must have at least one lower character.";
   public static final String USER_PASSWORD_MUST_HAVE_AT_LEAST_ONE_UPPER_CHAR = "Password must have at least one upper character.";
   public static final String USER_PASSWORD_MUST_HAVE_AT_LEAST_ONE_SPECIAL_CHAR = "Password must have at least one special character @#$%^&+= .";
+  public static final String USER_PAYMENT_METHOD_INVALID = "User payment method invalid.";
 }
