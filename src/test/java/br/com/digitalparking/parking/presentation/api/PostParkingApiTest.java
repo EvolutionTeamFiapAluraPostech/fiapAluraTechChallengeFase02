@@ -118,7 +118,7 @@ class PostParkingApiTest {
       throws Exception {
     var user = createUserWithVehicle();
     var vehicle = user.getVehicles().get(0);
-    var parkingInput = createParkingInput(user, vehicle, ParkingType.FLEX, ParkingTime.ONE);
+    var parkingInput = createParkingInput(user, vehicle, ParkingType.FLEX, ParkingTime.UNLIMITED);
 
     var request = post(URL_PARKING)
         .contentType(APPLICATION_JSON)
