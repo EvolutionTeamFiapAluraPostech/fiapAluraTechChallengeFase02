@@ -8,4 +8,6 @@ public final class ParkingMessages {
   public static final String PARKING_PIX_PAYMENT_METHOD_INVALID = "Pix payment method is invalid for parking type %s.";
   public static final String PARKING_PAYMENT_VALUE_INVALID = "Payment value must be greater than zero.";
   public static final String PARKING_PAYMENT_HAS_ALREADY_BEEN_PAID = "Payment has already been paid.";
+  public static final String PARKING_PAYMENT_WAS_NOT_PAID = "Payment was not paid.";
+  public static final String PARKING_HAS_ALREADY_BEEN_CLOSED = "Parking has already been closed.";
 }

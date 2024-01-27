@@ -3,6 +3,7 @@ package br.com.digitalparking.parking.presentation.api;
 import br.com.digitalparking.parking.application.usecase.CreateOrUpdateParkingPaymentUseCase;
 import br.com.digitalparking.parking.application.usecase.CreateParkingUseCase;
 import br.com.digitalparking.parking.application.usecase.GetParkingByIdUseCase;
+import br.com.digitalparking.parking.application.usecase.UpdateParkingStateCloseUseCase;
 import br.com.digitalparking.parking.application.usecase.UpdateParkingUseCase;
 import br.com.digitalparking.parking.presentation.dto.ParkingInputDto;
 import br.com.digitalparking.parking.presentation.dto.ParkingOutputDto;
@@ -26,14 +27,17 @@ public class ParkingApi {
   private final GetParkingByIdUseCase getParkingByIdUseCase;
   private final UpdateParkingUseCase updateParkingUseCase;
   private final CreateOrUpdateParkingPaymentUseCase createOrUpdateParkingPaymentUseCase;
+  private final UpdateParkingStateCloseUseCase updateParkingStateCloseUseCase;
 
   public ParkingApi(CreateParkingUseCase createParkingUseCase,
       GetParkingByIdUseCase getParkingByIdUseCase, UpdateParkingUseCase updateParkingUseCase,
-      CreateOrUpdateParkingPaymentUseCase createOrUpdateParkingPaymentUseCase) {
+      CreateOrUpdateParkingPaymentUseCase createOrUpdateParkingPaymentUseCase,
+      UpdateParkingStateCloseUseCase updateParkingStateCloseUseCase) {
     this.createParkingUseCase = createParkingUseCase;
     this.getParkingByIdUseCase = getParkingByIdUseCase;
     this.updateParkingUseCase = updateParkingUseCase;
     this.createOrUpdateParkingPaymentUseCase = createOrUpdateParkingPaymentUseCase;
+    this.updateParkingStateCloseUseCase = updateParkingStateCloseUseCase;
   }
 
   @PostMapping
@@ -62,10 +66,16 @@ public class ParkingApi {
 
   @PutMapping("/{uuid}/payment")
   @ResponseStatus(HttpStatus.ACCEPTED)
-  public ParkingOutputDto postParkingPayment(@PathVariable String uuid,
+  public ParkingOutputDto putParkingPayment(@PathVariable String uuid,
       @RequestBody @Valid ParkingPaymentInputDto parkingPaymentInputDto) {
     var parkingPayment = ParkingPaymentInputDto.to(parkingPaymentInputDto);
     var parkingSaved = createOrUpdateParkingPaymentUseCase.execute(uuid, parkingPayment);
     return ParkingOutputDto.from(parkingSaved);
+  }
+
+  @PutMapping("/{uuid}/close")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public void putParkingStateClosed(@PathVariable String uuid) {
+    updateParkingStateCloseUseCase.execute(uuid);
   }
 }
