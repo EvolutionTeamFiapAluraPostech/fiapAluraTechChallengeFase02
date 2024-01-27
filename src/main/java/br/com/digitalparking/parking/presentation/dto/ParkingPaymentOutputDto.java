@@ -10,7 +10,7 @@ public record ParkingPaymentOutputDto(
 ) {
 
   public ParkingPaymentOutputDto(ParkingPayment parkingPayment) {
-    this(parkingPayment.getPaymentMethod().getDescription(),
+    this(parkingPayment.getPaymentMethod().name(),
         parkingPayment.getPaymentState().name(),
         parkingPayment.getPaymentValue());
   }
