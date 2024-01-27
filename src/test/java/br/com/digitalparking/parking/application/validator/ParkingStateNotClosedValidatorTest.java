@@ -13,22 +13,22 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-class ParkingStateAvailableValidatorTest {
+class ParkingStateNotClosedValidatorTest {
 
   @Spy
-  private ParkingStateAvailableValidator parkingStateAvailableValidator;
+  private ParkingStateNotClosedValidator parkingStateNotClosedValidator;
 
   @Test
   void shouldValidateParkingState() {
     var parking = createParking();
     parking.setParkingState(OPEN);
-    assertDoesNotThrow(() -> parkingStateAvailableValidator.validate(parking));
+    assertDoesNotThrow(() -> parkingStateNotClosedValidator.validate(parking));
   }
 
   @Test
   void shouldThrowExceptionWhenParkingStateIsClosed() {
     var parking = createParking();
     parking.setParkingState(CLOSED);
-    assertThrows(ValidatorException.class, () -> parkingStateAvailableValidator.validate(parking));
+    assertThrows(ValidatorException.class, () -> parkingStateNotClosedValidator.validate(parking));
   }
 }

@@ -6,7 +6,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import br.com.digitalparking.parking.application.validator.ParkingPaymentStatePaidValidator;
-import br.com.digitalparking.parking.application.validator.ParkingStateAvailableValidator;
+import br.com.digitalparking.parking.application.validator.ParkingStateNotClosedValidator;
 import br.com.digitalparking.parking.model.service.ParkingService;
 import br.com.digitalparking.shared.model.entity.validator.UuidValidator;
 import br.com.digitalparking.shared.testData.parking.ParkingTestData;
@@ -24,7 +24,7 @@ class UpdateParkingStateCloseUseCaseTest {
   @Mock
   private UuidValidator uuidValidator;
   @Mock
-  private ParkingStateAvailableValidator parkingStateAvailableValidator;
+  private ParkingStateNotClosedValidator parkingStateNotClosedValidator;
   @Mock
   private ParkingPaymentStatePaidValidator parkingPaymentStatePaidValidator;
   @InjectMocks
@@ -38,7 +38,7 @@ class UpdateParkingStateCloseUseCaseTest {
 
     assertDoesNotThrow(() -> updateParkingStateCloseUseCase.execute(parking.getId().toString()));
     verify(uuidValidator).validate(parking.getId().toString());
-    verify(parkingStateAvailableValidator).validate(parking);
+    verify(parkingStateNotClosedValidator).validate(parking);
     verify(parkingPaymentStatePaidValidator).validate(parking);
   }
 }

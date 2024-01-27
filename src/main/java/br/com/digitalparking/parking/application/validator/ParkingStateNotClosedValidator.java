@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.FieldError;
 
 @Component
-public class ParkingStateAvailableValidator {
+public class ParkingStateNotClosedValidator {
 
   public void validate(Parking parking) {
     if (parking != null && ParkingState.CLOSED.equals(parking.getParkingState())) {
