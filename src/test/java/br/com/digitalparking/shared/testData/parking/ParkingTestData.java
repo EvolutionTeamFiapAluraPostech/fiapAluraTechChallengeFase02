@@ -1,6 +1,6 @@
 package br.com.digitalparking.shared.testData.parking;
 
-import static br.com.digitalparking.parking.model.enums.ParkingState.CLOSED;
+import static br.com.digitalparking.parking.model.enums.ParkingState.BUSY;
 import static br.com.digitalparking.parking.model.enums.ParkingType.FIXED;
 import static br.com.digitalparking.shared.model.enums.PaymentMethod.CREDIT_CARD;
 import static br.com.digitalparking.shared.model.enums.PaymentState.NOT_PAID;
@@ -32,7 +32,7 @@ public final class ParkingTestData {
   public static final String DEFAULT_PARKING_COUNTRY = "Brasil";
   public static final ParkingType DEFAULT_PARKING_TYPE = FIXED;
   public static final String DEFAULT_PARKING_TIME = "2-Hours";
-  public static final ParkingState DEFAULT_PARKING_PARKING_STATE = CLOSED;
+  public static final ParkingState DEFAULT_PARKING_PARKING_STATE = BUSY;
   public static final PaymentMethod DEFAULT_PARKING_PAYMENT_METHOD = CREDIT_CARD;
   public static final BigDecimal DEFAULT_PARKING_PAYMENT_VALUE = new BigDecimal("5.00");
   public static final String ALTERNATE_PARKING_LATITUDE = "-23.58808";
