@@ -2,9 +2,11 @@ package br.com.digitalparking.parking.application.usecase;
 
 import static br.com.digitalparking.parking.model.enums.ParkingState.CLOSED;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import br.com.digitalparking.parking.application.event.ParkingCloseEventPublisher;
 import br.com.digitalparking.parking.application.validator.ParkingPaymentStatePaidValidator;
 import br.com.digitalparking.parking.application.validator.ParkingStateNotClosedValidator;
 import br.com.digitalparking.parking.model.service.ParkingService;
@@ -27,6 +29,8 @@ class UpdateParkingStateCloseUseCaseTest {
   private ParkingStateNotClosedValidator parkingStateNotClosedValidator;
   @Mock
   private ParkingPaymentStatePaidValidator parkingPaymentStatePaidValidator;
+  @Mock
+  private ParkingCloseEventPublisher parkingCloseEventPublisher;
   @InjectMocks
   private UpdateParkingStateCloseUseCase updateParkingStateCloseUseCase;
 
@@ -40,5 +44,6 @@ class UpdateParkingStateCloseUseCaseTest {
     verify(uuidValidator).validate(parking.getId().toString());
     verify(parkingStateNotClosedValidator).validate(parking);
     verify(parkingPaymentStatePaidValidator).validate(parking);
+    verify(parkingCloseEventPublisher).publishEvent(any());
   }
 }

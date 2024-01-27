@@ -11,4 +11,7 @@ public interface ParkingNotification {
 
   @PutMapping("/notifications/{uuid}/payment")
   void notifyParkingPayment(@PathVariable String uuid, @RequestBody ParkingOutputDto parking);
+
+  @PutMapping("/notifications/{uuid}/close")
+  void notifyParkingClose(@PathVariable String uuid, @RequestBody ParkingOutputDto parking);
 }
