@@ -20,6 +20,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.Where;
 
 @SuperBuilder
 @Data
@@ -28,6 +29,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @Entity
 @Table(schema = "parking_management", name = "parking")
+@Where(clause = "deleted = false")
 public class Parking extends BaseEntity {
 
   @ManyToOne

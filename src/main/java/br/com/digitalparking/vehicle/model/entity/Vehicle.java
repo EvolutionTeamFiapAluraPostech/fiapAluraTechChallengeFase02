@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.Where;
 
 @SuperBuilder
 @Data
@@ -17,6 +18,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @Entity
 @Table(schema = "user_management", name = "vehicles")
+@Where(clause = "deleted = false")
 public class Vehicle extends BaseEntity {
 
   @Column(nullable = false)

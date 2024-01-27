@@ -20,6 +20,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.Where;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -31,6 +32,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @AllArgsConstructor
 @Entity
 @Table(schema = "user_management", name = "users")
+@Where(clause = "deleted = false")
 public class User extends BaseEntity implements UserDetails {
 
   @Column(nullable = false)
