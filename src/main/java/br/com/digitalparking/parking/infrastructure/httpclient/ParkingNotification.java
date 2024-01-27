@@ -9,6 +9,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 @FeignClient(value = "ParkingNotification", url = "${base.url.http-payment-notification}")
 public interface ParkingNotification {
 
-  @PutMapping("/notifications/{uuid}")
+  @PutMapping("/notifications/{uuid}/payment")
   void notifyParkingPayment(@PathVariable String uuid, @RequestBody ParkingOutputDto parking);
 }
