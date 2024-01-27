@@ -35,7 +35,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @IntegrationTest
 @DatabaseTest
 @WireMockTest(httpPort = 7070)
-class PostParkingPaymentApiTest {
+class PutParkingPaymentApiTest {
 
   private static final String URL_PARKING = "/parking/";
   private final MockMvc mockMvc;
@@ -43,7 +43,7 @@ class PostParkingPaymentApiTest {
   private final TestAuthentication testAuthentication;
 
   @Autowired
-  PostParkingPaymentApiTest(MockMvc mockMvc, EntityManager entityManager,
+  PutParkingPaymentApiTest(MockMvc mockMvc, EntityManager entityManager,
       TestAuthentication testAuthentication) {
     this.mockMvc = mockMvc;
     this.entityManager = entityManager;
