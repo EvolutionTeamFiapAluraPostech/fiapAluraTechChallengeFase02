@@ -68,4 +68,11 @@ public class Parking extends BaseEntity {
     }
     return this.getParkingTime() != null && this.getParkingTime() >= 0;
   }
+
+  public Boolean isParkingPaymentSaved() {
+    if (this.getParkingPayment() != null && this.getParkingPayment().getDeleted()) {
+      return false;
+    }
+    return this.getParkingPayment() == null;
+  }
 }

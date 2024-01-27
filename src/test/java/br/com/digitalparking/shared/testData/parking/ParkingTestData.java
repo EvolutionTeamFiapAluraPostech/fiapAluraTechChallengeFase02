@@ -3,6 +3,7 @@ package br.com.digitalparking.shared.testData.parking;
 import static br.com.digitalparking.parking.model.enums.ParkingState.CLOSED;
 import static br.com.digitalparking.parking.model.enums.ParkingType.FIXED;
 import static br.com.digitalparking.shared.model.enums.PaymentMethod.CREDIT_CARD;
+import static br.com.digitalparking.shared.model.enums.PaymentState.NOT_PAID;
 import static br.com.digitalparking.shared.testData.user.UserTestData.createUser;
 import static br.com.digitalparking.shared.testData.vehicle.VehicleTestData.createVehicle;
 
@@ -12,7 +13,6 @@ import br.com.digitalparking.parking.model.enums.ParkingState;
 import br.com.digitalparking.parking.model.enums.ParkingTime;
 import br.com.digitalparking.parking.model.enums.ParkingType;
 import br.com.digitalparking.shared.model.enums.PaymentMethod;
-import br.com.digitalparking.shared.model.enums.PaymentState;
 import br.com.digitalparking.user.model.entity.User;
 import br.com.digitalparking.vehicle.model.entity.Vehicle;
 import java.math.BigDecimal;
@@ -99,7 +99,7 @@ public final class ParkingTestData {
         .id(UUID.randomUUID())
         .paymentMethod(CREDIT_CARD)
         .paymentValue(new BigDecimal("5.00"))
-        .paymentState(PaymentState.PAID)
+        .paymentState(NOT_PAID)
         .build();
   }
 }

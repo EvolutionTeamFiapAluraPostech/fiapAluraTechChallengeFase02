@@ -11,7 +11,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.ok;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -83,19 +83,19 @@ class PostParkingPaymentApiTest {
   }
 
   @Test
-  void shouldCreateParkingPayment() throws Exception {
+  void shouldCreateOrUpdateParkingPayment() throws Exception {
     var user = createUserWithVehicle();
     var vehicle = user.getVehicles().get(0);
     var parking = createAndPersistParking(user, vehicle);
     var parkingInput = createParkingPaymentInput();
     stubFor(WireMock.put("/notifications/" + parking.getId()).willReturn(ok()));
 
-    var request = post(URL_PARKING + parking.getId() + "/payment")
+    var request = put(URL_PARKING + parking.getId() + "/payment")
         .contentType(APPLICATION_JSON)
         .content(parkingInput)
         .with(testAuthentication.defineAuthenticatedUser(user));
     var mvcResult = mockMvc.perform(request)
-        .andExpect(status().isCreated())
+        .andExpect(status().isAccepted())
         .andExpect(content().contentType(APPLICATION_JSON))
         .andExpect(jsonPath("$.id", isUUID()))
         .andReturn();
@@ -116,7 +116,7 @@ class PostParkingPaymentApiTest {
     var user = createUserWithVehicle();
     var parkingInput = createParkingPaymentInput();
 
-    var request = post(URL_PARKING + UUID.randomUUID() + "/payment")
+    var request = put(URL_PARKING + UUID.randomUUID() + "/payment")
         .contentType(APPLICATION_JSON)
         .content(parkingInput)
         .with(testAuthentication.defineAuthenticatedUser(user));
@@ -130,7 +130,7 @@ class PostParkingPaymentApiTest {
     var parking = createAndPersistParking(user, vehicle);
     var parkingInput = createParkingPaymentWithoutPaymentMethodInput();
 
-    var request = post(URL_PARKING + parking.getId() + "/payment")
+    var request = put(URL_PARKING + parking.getId() + "/payment")
         .contentType(APPLICATION_JSON)
         .content(parkingInput)
         .with(testAuthentication.defineAuthenticatedUser(user));
@@ -144,7 +144,7 @@ class PostParkingPaymentApiTest {
     var parking = createAndPersistParking(user, vehicle);
     var parkingInput = createParkingPaymentWithPaymentValueZeroInput();
 
-    var request = post(URL_PARKING + parking.getId() + "/payment")
+    var request = put(URL_PARKING + parking.getId() + "/payment")
         .contentType(APPLICATION_JSON)
         .content(parkingInput)
         .with(testAuthentication.defineAuthenticatedUser(user));

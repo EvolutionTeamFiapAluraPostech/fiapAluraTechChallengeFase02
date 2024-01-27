@@ -8,6 +8,8 @@ import static org.mockito.Mockito.when;
 
 import br.com.digitalparking.parking.application.event.ParkingPaymentEvent;
 import br.com.digitalparking.parking.application.event.ParkingPaymentEventPublisher;
+import br.com.digitalparking.parking.application.validator.PaymentHasAlreadyPaidValidator;
+import br.com.digitalparking.parking.application.validator.PaymentValueValidator;
 import br.com.digitalparking.parking.model.service.ParkingService;
 import br.com.digitalparking.shared.model.entity.validator.UuidValidator;
 import org.junit.jupiter.api.Test;
@@ -17,16 +19,20 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-class CreateParkingPaymentUseCaseTest {
+class CreateOrUpdateParkingPaymentUseCaseTest {
 
   @Mock
   private ParkingService parkingService;
   @Mock
   private UuidValidator uuidValidator;
   @Mock
+  private PaymentHasAlreadyPaidValidator paymentHasAlreadyPaidValidator;
+  @Mock
+  private PaymentValueValidator paymentValueValidator;
+  @Mock
   private ParkingPaymentEventPublisher parkingPaymentEventPublisher;
   @InjectMocks
-  private CreateParkingPaymentUseCase createParkingPaymentUseCase;
+  private CreateOrUpdateParkingPaymentUseCase createOrUpdateParkingPaymentUseCase;
 
   @Test
   void shouldCreateParkingPayment() {
@@ -35,12 +41,14 @@ class CreateParkingPaymentUseCaseTest {
     when(parkingService.findById(parking.getId())).thenReturn(parking);
     when(parkingService.save(parking)).then(returnsFirstArg());
 
-    var parkingSaved = createParkingPaymentUseCase.execute(parking.getId().toString(),
+    var parkingSaved = createOrUpdateParkingPaymentUseCase.execute(parking.getId().toString(),
         parkingPayment);
 
     assertThat(parkingSaved).isNotNull();
     assertThat(parkingSaved).usingRecursiveComparison().isEqualTo(parking);
     verify(uuidValidator).validate(parking.getId().toString());
+    verify(paymentHasAlreadyPaidValidator).validate(parkingPayment);
+    verify(paymentValueValidator).validate(parkingPayment);
     verify(parkingPaymentEventPublisher).publishEvent(new ParkingPaymentEvent(parkingSaved));
   }
 }

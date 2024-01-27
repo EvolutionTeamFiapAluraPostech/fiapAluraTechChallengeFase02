@@ -1,8 +1,8 @@
 package br.com.digitalparking.parking.presentation.api;
 
+import br.com.digitalparking.parking.application.usecase.CreateOrUpdateParkingPaymentUseCase;
 import br.com.digitalparking.parking.application.usecase.CreateParkingUseCase;
 import br.com.digitalparking.parking.application.usecase.GetParkingByIdUseCase;
-import br.com.digitalparking.parking.application.usecase.CreateParkingPaymentUseCase;
 import br.com.digitalparking.parking.application.usecase.UpdateParkingUseCase;
 import br.com.digitalparking.parking.presentation.dto.ParkingInputDto;
 import br.com.digitalparking.parking.presentation.dto.ParkingOutputDto;
@@ -25,15 +25,15 @@ public class ParkingApi {
   private final CreateParkingUseCase createParkingUseCase;
   private final GetParkingByIdUseCase getParkingByIdUseCase;
   private final UpdateParkingUseCase updateParkingUseCase;
-  private final CreateParkingPaymentUseCase createParkingPaymentUseCase;
+  private final CreateOrUpdateParkingPaymentUseCase createOrUpdateParkingPaymentUseCase;
 
   public ParkingApi(CreateParkingUseCase createParkingUseCase,
       GetParkingByIdUseCase getParkingByIdUseCase, UpdateParkingUseCase updateParkingUseCase,
-      CreateParkingPaymentUseCase createParkingPaymentUseCase) {
+      CreateOrUpdateParkingPaymentUseCase createOrUpdateParkingPaymentUseCase) {
     this.createParkingUseCase = createParkingUseCase;
     this.getParkingByIdUseCase = getParkingByIdUseCase;
     this.updateParkingUseCase = updateParkingUseCase;
-    this.createParkingPaymentUseCase = createParkingPaymentUseCase;
+    this.createOrUpdateParkingPaymentUseCase = createOrUpdateParkingPaymentUseCase;
   }
 
   @PostMapping
@@ -60,12 +60,12 @@ public class ParkingApi {
     return ParkingOutputDto.from(parkingUpdated);
   }
 
-  @PostMapping("/{uuid}/payment")
-  @ResponseStatus(HttpStatus.CREATED)
+  @PutMapping("/{uuid}/payment")
+  @ResponseStatus(HttpStatus.ACCEPTED)
   public ParkingOutputDto postParkingPayment(@PathVariable String uuid,
       @RequestBody @Valid ParkingPaymentInputDto parkingPaymentInputDto) {
     var parkingPayment = ParkingPaymentInputDto.to(parkingPaymentInputDto);
-    var parkingSaved = createParkingPaymentUseCase.execute(uuid, parkingPayment);
+    var parkingSaved = createOrUpdateParkingPaymentUseCase.execute(uuid, parkingPayment);
     return ParkingOutputDto.from(parkingSaved);
   }
 }
