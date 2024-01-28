@@ -103,7 +103,7 @@ public interface UsersApi {
       description = "Endpoint para excluir usuários. A exclusão é feita por soft delete",
       tags = {"UsersApi"})
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "successful operation", content = {
+      @ApiResponse(responseCode = "204", description = "successful operation", content = {
           @Content(schema = @Schema(hidden = true))}),
       @ApiResponse(responseCode = "400", description = "bad request para UUID inválido", content = {
           @Content(schema = @Schema(hidden = true))}),

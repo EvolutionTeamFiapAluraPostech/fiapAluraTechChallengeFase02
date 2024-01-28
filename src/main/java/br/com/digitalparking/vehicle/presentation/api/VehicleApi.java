@@ -61,7 +61,7 @@ public interface VehicleApi {
       description = "Endpoint para excluir veículo. A exclusão é feita por soft delete",
       tags = {"VehicleApi"})
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "successful operation"),
+      @ApiResponse(responseCode = "204", description = "successful operation"),
       @ApiResponse(responseCode = "400", description = "bad request para UUID inválido",
           content = {@Content(schema = @Schema(hidden = true))}),
       @ApiResponse(responseCode = "404", description = "not found para veículo não encontrado",
