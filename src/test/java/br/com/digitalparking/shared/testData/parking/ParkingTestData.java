@@ -42,11 +42,18 @@ public final class ParkingTestData {
   public static final String ALTERNATE_PARKING_CITY = "São Paulo";
   public static final String ALTERNATE_PARKING_STATE = "SP";
   public static final String ALTERNATE_PARKING_COUNTRY = "Brasil";
+  public static final ParkingState ALTERNATE_PARKING_PARKING_STATE = BUSY;
 
   public static final String PARKING_TEMPLATE_INPUT = """
       {"vehicleId": "%s", "userId": "%s", "latitude": "%s", "longitude": "%s", "street": "%s",
       "neighborhood": "%s", "city": "%s", "state": "%s", "country": "%s", "parkingType": "%s",
       "parkingTime": "%s"}
+      """;
+
+  public static final String PARKING_UPDATE_TEMPLATE_INPUT = """
+      {"vehicleId": "%s", "userId": "%s", "latitude": "%s", "longitude": "%s", "street": "%s",
+      "neighborhood": "%s", "city": "%s", "state": "%s", "country": "%s", "parkingState": "%s",
+      "parkingType": "%s", "parkingTime": "%s", "initialParking": "%s", "finalParking": "%s"}
       """;
 
   public static final String PARKING_PAYMENT_TEMPLATE_INPUT = """

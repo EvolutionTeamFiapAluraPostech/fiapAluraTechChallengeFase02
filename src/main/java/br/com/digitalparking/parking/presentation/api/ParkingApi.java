@@ -8,6 +8,7 @@ import br.com.digitalparking.parking.application.usecase.UpdateParkingUseCase;
 import br.com.digitalparking.parking.presentation.dto.ParkingInputDto;
 import br.com.digitalparking.parking.presentation.dto.ParkingOutputDto;
 import br.com.digitalparking.parking.presentation.dto.ParkingPaymentInputDto;
+import br.com.digitalparking.parking.presentation.dto.ParkingUpdateInputDto;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -58,8 +59,8 @@ public class ParkingApi {
   @PutMapping("/{uuid}")
   @ResponseStatus(HttpStatus.ACCEPTED)
   public ParkingOutputDto putParking(@PathVariable String uuid,
-      @RequestBody @Valid ParkingInputDto parkingInputDto) {
-    var parking = ParkingInputDto.to(parkingInputDto);
+      @RequestBody @Valid ParkingUpdateInputDto parkingUpdateInputDto) {
+    var parking = ParkingUpdateInputDto.to(parkingUpdateInputDto);
     var parkingUpdated = updateParkingUseCase.execute(uuid, parking);
     return ParkingOutputDto.from(parkingUpdated);
   }
