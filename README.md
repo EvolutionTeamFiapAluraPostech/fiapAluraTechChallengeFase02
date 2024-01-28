@@ -29,6 +29,7 @@ Repositório do projeto da pós tech da FIAP/ALURA. Desenvolvimento de uma solu�
 6. Postgres 15.1
 7. Flyway
 8. JUnit
+9. Mockito
 9. TestContainers
 10. Wiremock
 11. Docker
