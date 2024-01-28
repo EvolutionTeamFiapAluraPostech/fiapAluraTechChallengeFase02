@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/authenticate")
-public class AuthenticationController {
+public class AuthenticationController implements AuthenticationInterface {
 
   private final AuthenticationManager authenticationManager;
   private final TokenService tokenService;
