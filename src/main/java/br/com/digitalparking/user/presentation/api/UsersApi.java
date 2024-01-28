@@ -1,149 +1,115 @@
 package br.com.digitalparking.user.presentation.api;
 
-import br.com.digitalparking.user.application.usecase.CreateUserUseCase;
-import br.com.digitalparking.user.application.usecase.DeleteUserUseCase;
-import br.com.digitalparking.user.application.usecase.GetAllUsersUseCase;
-import br.com.digitalparking.user.application.usecase.GetUserByCpfUseCase;
-import br.com.digitalparking.user.application.usecase.GetUserByEmailUseCase;
-import br.com.digitalparking.user.application.usecase.GetUserByIdUseCase;
-import br.com.digitalparking.user.application.usecase.GetUsersByNameOrEmailUseCase;
-import br.com.digitalparking.user.application.usecase.GetUsersByNameUseCase;
-import br.com.digitalparking.user.application.usecase.UpdateUserPaymentMethodUserUseCase;
-import br.com.digitalparking.user.application.usecase.UpdateUserUseCase;
 import br.com.digitalparking.user.presentation.dto.PostUserInputDto;
 import br.com.digitalparking.user.presentation.dto.PutUserInputDto;
 import br.com.digitalparking.user.presentation.dto.UserFilter;
 import br.com.digitalparking.user.presentation.dto.UserOutputDto;
 import br.com.digitalparking.user.presentation.dto.UserPaymentMethodDto;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.Email;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
 
-@RestController
-@RequestMapping("/users")
-public class UsersApi {
+@Tag(name = "UsersApi", description = "API de cadastro de condutor do veículo/usuário do aplicativo")
+public interface UsersApi {
 
-  private final CreateUserUseCase createUserUseCase;
-  private final GetAllUsersUseCase getAllUsersUseCase;
-  private final GetUserByEmailUseCase getUserByEmailUseCase;
-  private final GetUsersByNameUseCase getUsersByNameUseCase;
-  private final GetUserByIdUseCase getUserByIdUseCase;
-  private final GetUsersByNameOrEmailUseCase getUsersByNameOrEmailUseCase;
-  private final UpdateUserUseCase updateUserUseCase;
-  private final DeleteUserUseCase deleteUserUseCase;
-  private final GetUserByCpfUseCase getUserByCpfUseCase;
-  private final UpdateUserPaymentMethodUserUseCase updateUserPaymentMethodUserUseCase;
+  @Operation(summary = "Lista de usuários",
+      description = "Endpoint para recuperar uma lista paginada de usuários ordenada por nome",
+      tags = {"UsersApi"})
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "successful operation", content = {
+          @Content(mediaType = "application/json", schema = @Schema(implementation = UserOutputDto.class))})})
+  Page<UserOutputDto> getAllUsersPaginated(
+      @Parameter(description = "Interface com atributos para paginação") Pageable pageable);
 
-  public UsersApi(
-      CreateUserUseCase createUserUseCase,
-      GetAllUsersUseCase getAllUsersUseCase,
-      GetUserByEmailUseCase getUserByEmailUseCase,
-      GetUsersByNameUseCase getUsersByNameUseCase,
-      GetUserByIdUseCase getUserByIdUseCase,
-      GetUsersByNameOrEmailUseCase getUsersByNameOrEmailUseCase,
-      UpdateUserUseCase updateUserUseCase,
-      DeleteUserUseCase deleteUserUseCase, GetUserByCpfUseCase getUserByCpfUseCase,
-      UpdateUserPaymentMethodUserUseCase updateUserPaymentMethodUserUseCase) {
-    this.createUserUseCase = createUserUseCase;
-    this.getAllUsersUseCase = getAllUsersUseCase;
-    this.getUserByEmailUseCase = getUserByEmailUseCase;
-    this.getUsersByNameUseCase = getUsersByNameUseCase;
-    this.getUserByIdUseCase = getUserByIdUseCase;
-    this.getUsersByNameOrEmailUseCase = getUsersByNameOrEmailUseCase;
-    this.updateUserUseCase = updateUserUseCase;
-    this.deleteUserUseCase = deleteUserUseCase;
-    this.getUserByCpfUseCase = getUserByCpfUseCase;
-    this.updateUserPaymentMethodUserUseCase = updateUserPaymentMethodUserUseCase;
-  }
+  @Operation(summary = "Cadastro de usuários",
+      description = "Endpoint para cadastrar novos usuários. O email e CPF devem ser únicos na base de dados",
+      tags = {"UsersApi"})
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "201", description = "successful operation", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = UserOutputDto.class))}),
+      @ApiResponse(responseCode = "400", description = "bad request para validação de senha, email e cpf")})
+  UserOutputDto postUser(
+      @Parameter(description = "DTO com atributos para se cadastrar um novo usuário. Requer validação de dados informados, como nome, email, cpf e senha")
+      PostUserInputDto postUserInputDto);
 
-  @GetMapping
-  @ResponseStatus(HttpStatus.OK)
-  public Page<UserOutputDto> getAllUsersPaginated(
-      @PageableDefault(sort = {"name"}) Pageable pageable) {
-    var usersPage = getAllUsersUseCase.execute(pageable);
-    return UserOutputDto.toPage(usersPage);
-  }
+  @Operation(summary = "Recupera um usuário",
+      description = "Endpoint para recuperar um usuário pelo email cadastrado",
+      tags = {"UsersApi"})
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "successful operation", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = UserOutputDto.class))}),
+      @ApiResponse(responseCode = "404", description = "not found")})
+  UserOutputDto getUserByEmail(@Parameter(description = "email válido") String email);
 
-  @PostMapping
-  @ResponseStatus(HttpStatus.CREATED)
-  public UserOutputDto postUser(@RequestBody @Valid PostUserInputDto postUserInputDto) {
-    var user = PostUserInputDto.toUser(postUserInputDto);
-    var userCreated = createUserUseCase.execute(user);
-    return UserOutputDto.from(userCreated);
-  }
+  @Operation(summary = "Lista de usuários",
+      description = "Endpoint para recuperar uma lista paginada de usuários, filtrada por nome, ordenada por nome",
+      tags = {"UsersApi"})
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "successful operation", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = UserOutputDto.class))})})
+  Page<UserOutputDto> getUsersByName(
+      @Parameter(description = "Nome do condutor/usuário") String name,
+      @Parameter(description = "Interface com atributos para paginação") Pageable pageable);
 
-  @GetMapping("/email/{email}")
-  @ResponseStatus(HttpStatus.OK)
-  public UserOutputDto getUserByEmail(@PathVariable @Email String email) {
-    var userFound = getUserByEmailUseCase.execute(email);
-    return UserOutputDto.from(userFound);
-  }
+  @Operation(summary = "Recupera um usuário",
+      description = "Endpoint para recuperar um usuário pelo ID cadastrado",
+      tags = {"UsersApi"})
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "successful operation", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = UserOutputDto.class))}),
+      @ApiResponse(responseCode = "404", description = "not found para usuário não encontrado")})
+  UserOutputDto getUserById(
+      @Parameter(description = "UUID do condutor/usuário válido") String userId);
 
-  @GetMapping("/name/{name}")
-  @ResponseStatus(HttpStatus.OK)
-  public Page<UserOutputDto> getUsersByName(@PathVariable String name,
-      @PageableDefault(sort = {"name"}) Pageable pageable) {
-    var usersPage = getUsersByNameUseCase.execute(name, pageable);
-    return UserOutputDto.toPage(usersPage);
-  }
+  @Operation(summary = "Lista de usuários",
+      description = "Endpoint para recuperar uma lista paginada de usuários, filtrada por nome OU email, ordenada por nome",
+      tags = {"UsersApi"})
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "successful operation", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = UserOutputDto.class))}),
+      @ApiResponse(responseCode = "404", description = "not found para usuário não encontrado")})
+  Page<UserOutputDto> getUsersByNameOrEmail(
+      @Parameter(description = "DTO com os atributos nome ou email para serem utilizados como filtro de pesquisa. Pode ser informado o nome ou o email.") UserFilter userFilter,
+      @Parameter(description = "Interface com atributos para paginação") Pageable pageable);
 
-  @GetMapping("/{userId}")
-  @ResponseStatus(HttpStatus.OK)
-  public UserOutputDto getUserById(@PathVariable String userId) {
-    var user = getUserByIdUseCase.execute(userId);
-    return UserOutputDto.from(user);
-  }
+  @Operation(summary = "Atualiza usuários",
+      description = "Endpoint para atualizar dados do usuário",
+      tags = {"UsersApi"})
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "202", description = "successful operation", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = UserOutputDto.class))}),
+      @ApiResponse(responseCode = "400", description = "bad request para UUID inválido"),
+      @ApiResponse(responseCode = "404", description = "not found para usuário não encontrado"),
+      @ApiResponse(responseCode = "409", description = "conflic para email/cpf já cadastrado em outro usuário")})
+  UserOutputDto putUser(@Parameter(description = "UUID do condutor/usuário válido") String userUuid,
+      @Parameter(description = "DTO com atributos para se cadastrar um novo usuário. Requer validação de dados informados, como nome, email, cpf e senha") PutUserInputDto putUserInputDto);
 
-  @GetMapping("/user-name-email")
-  @ResponseStatus(HttpStatus.OK)
-  public Page<UserOutputDto> getUsersByNameOrEmail(UserFilter userFilter,
-      @PageableDefault(sort = {"name"}) Pageable pageable) {
-    var usersPage = getUsersByNameOrEmailUseCase.execute(userFilter.name(), userFilter.email(),
-        pageable);
-    return !usersPage.getContent().isEmpty() ? UserOutputDto.toPage(usersPage) : Page.empty();
-  }
+  @Operation(summary = "Exclui usuários",
+      description = "Endpoint para excluir usuários. A exclusão é feita por soft delete",
+      tags = {"UsersApi"})
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "successful operation"),
+      @ApiResponse(responseCode = "400", description = "bad request para UUID inválido"),
+      @ApiResponse(responseCode = "404", description = "not found para usuário não encontrado")})
+  void deleteUser(@Parameter(description = "UUID do condutor/usuário válido") String userUuid);
 
-  @PutMapping("/{userUuid}")
-  @ResponseStatus(HttpStatus.ACCEPTED)
-  public UserOutputDto putUser(@PathVariable String userUuid,
-      @RequestBody @Valid PutUserInputDto putUserInputDto) {
-    var user = PutUserInputDto.toUser(putUserInputDto);
-    var userUpdated = updateUserUseCase.execute(userUuid, user);
-    return UserOutputDto.from(userUpdated);
-  }
+  @Operation(summary = "Recupera um usuário",
+      description = "Endpoint para recuperar um usuário pelo CPF cadastrado",
+      tags = {"UsersApi"})
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "successful operation", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = UserOutputDto.class))}),
+      @ApiResponse(responseCode = "404", description = "not found para usuário não encontrado")})
+  UserOutputDto getUserByCpf(@Parameter(description = "CPF do condutor/usuário válido") String cpf);
 
-  @DeleteMapping("/{userUuid}")
-  @ResponseStatus(HttpStatus.NO_CONTENT)
-  public void deleteUser(@PathVariable String userUuid) {
-    deleteUserUseCase.execute(userUuid);
-  }
-
-  @GetMapping("/cpf/{cpf}")
-  @ResponseStatus(HttpStatus.OK)
-  public UserOutputDto getUserByCpf(@PathVariable String cpf) {
-    var user = getUserByCpfUseCase.execute(cpf);
-    return UserOutputDto.from(user);
-  }
-
-  @PatchMapping("/{userUuid}")
-  @ResponseStatus(HttpStatus.ACCEPTED)
-  public UserOutputDto patchUserPaymentMethod(@PathVariable String userUuid,
-      @RequestBody UserPaymentMethodDto userPaymentMethodDto) {
-    var paymentMethod = userPaymentMethodDto.paymentMethod();
-    var user = updateUserPaymentMethodUserUseCase.execute(userUuid, paymentMethod);
-    return UserOutputDto.from(user);
-  }
+  @Operation(summary = "Recupera um usuário",
+      description = "Endpoint para recuperar um usuário pelo CPF cadastrado",
+      tags = {"UsersApi"})
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "successful operation"),
+      @ApiResponse(responseCode = "400", description = "bad request para UUID inválido"),
+      @ApiResponse(responseCode = "404", description = "not found para usuário não encontrado")})
+  UserOutputDto patchUserPaymentMethod(@PathVariable String userUuid,
+      @RequestBody UserPaymentMethodDto userPaymentMethodDto);
 }
