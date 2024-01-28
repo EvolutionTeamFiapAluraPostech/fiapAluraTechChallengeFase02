@@ -43,7 +43,7 @@ public final class UserTestData {
       {"paymentMethod": "%s"}""";
 
   public static final String USER_PAYMENT_METHOD_UPDATE = USER_PAYMENT_METHOD_TEMPLATE_UPDATE.formatted(
-      PaymentMethod.PIX.getDescription());
+      PaymentMethod.PIX.name());
 
 
   public static User createUser() {

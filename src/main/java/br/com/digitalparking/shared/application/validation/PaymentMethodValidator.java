@@ -17,7 +17,7 @@ public class PaymentMethodValidator {
           PAYMENT_METHOD_INVALID));
     }
     var paymentValidated = Arrays.stream(PaymentMethod.values()).anyMatch(
-        paymentMethodCorrect -> paymentMethodCorrect.getDescription().equals(paymentMethod));
+        paymentMethodCorrect -> paymentMethodCorrect.name().equals(paymentMethod));
     if (!paymentValidated) {
       throw new ValidatorException(new FieldError(this.getClass().getSimpleName(), "paymentMethod",
           PAYMENT_METHOD_INVALID.formatted(paymentMethod)));

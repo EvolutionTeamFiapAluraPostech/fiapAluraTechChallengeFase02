@@ -39,7 +39,7 @@ class UpdateUserPaymentMethodUserUseCaseTest {
     user.setUserPaymentMethod(userPaymentMethod);
     when(userService.findUserByIdRequired(user.getId())).thenReturn(user);
     when(userService.save(Mockito.any())).thenReturn(user);
-    var paymentMethod = "Pix";
+    var paymentMethod = "PIX";
 
     var userUpdated = updateUserPaymentMethodUserUseCase.execute(user.getId().toString(),
         paymentMethod);
@@ -59,7 +59,7 @@ class UpdateUserPaymentMethodUserUseCaseTest {
     user.setUserPaymentMethod(null);
     when(userService.findUserByIdRequired(user.getId())).thenReturn(user);
     when(userService.save(Mockito.any())).thenReturn(user);
-    var paymentMethod = "Pix";
+    var paymentMethod = "PIX";
 
     var userUpdated = updateUserPaymentMethodUserUseCase.execute(user.getId().toString(),
         paymentMethod);

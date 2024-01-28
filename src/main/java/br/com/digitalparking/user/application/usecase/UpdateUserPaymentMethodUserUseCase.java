@@ -33,8 +33,8 @@ public class UpdateUserPaymentMethodUserUseCase {
     return userService.save(user);
   }
 
-  private void setPaymentMethodTo(String paymentMethodDescription, User user) {
-    var paymentMethod = PaymentMethod.valueOfDescription(paymentMethodDescription);
+  private void setPaymentMethodTo(String paymentMethodName, User user) {
+    var paymentMethod = PaymentMethod.valueOf(paymentMethodName);
     var userPaymentMethod = UserPaymentMethod.builder().user(user)
         .paymentMethod(paymentMethod).build();
     user.setUserPaymentMethod(userPaymentMethod);

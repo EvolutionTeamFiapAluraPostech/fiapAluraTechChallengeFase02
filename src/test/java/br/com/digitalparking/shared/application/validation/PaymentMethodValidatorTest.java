@@ -18,14 +18,14 @@ class PaymentMethodValidatorTest {
   private PaymentMethodValidator paymentMethodValidator;
 
   @ParameterizedTest
-  @ValueSource(strings = {"Pix", "Credit Card", "Debit Card"})
+  @ValueSource(strings = {"PIX", "CREDIT_CARD", "DEBIT_CARD"})
   void shouldValidatePaymentMethod(String paymentMethod) {
     assertDoesNotThrow(() -> paymentMethodValidator.validate(paymentMethod));
   }
 
   @ParameterizedTest
   @NullAndEmptySource
-  @ValueSource(strings = {"PIX", "CREDIT CARD", "DEBIT CARD", "Dinheiro", "@123", "."})
+  @ValueSource(strings = {"pIX", "CREDIT CARD", "DEBIT CARD", "Dinheiro", "@123", "."})
   void shouldThrowExceptionWhenPaymentMethodIsInvalid(String paymentMethod) {
     assertThrows(ValidatorException.class, () -> paymentMethodValidator.validate(paymentMethod));
   }
