@@ -19,12 +19,18 @@ Repositório do projeto da pós tech da FIAP/ALURA. Desenvolvimento de uma solu�
 # Tecnologias utilizadas
 1. Java 17
 2. Spring Boot 3.1.2
+3. Spring Security
 3. Spring Web MVC
 4. Spring Data JPA
+5. Spring Bean Validation
+6. Spring Open Feign
+7. Spring Doc Open API
 5. Lombok
 6. Postgres 15.1
 7. Flyway
 8. JUnit
+9. TestContainers
+10. Wiremock
 
 # Setup do Projeto
 
