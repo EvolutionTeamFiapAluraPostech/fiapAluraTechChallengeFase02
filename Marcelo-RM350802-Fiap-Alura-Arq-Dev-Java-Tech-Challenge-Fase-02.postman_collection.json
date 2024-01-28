@@ -1,0 +1,386 @@
+{
+	"info": {
+		"_postman_id": "a4b92d64-d896-4733-9e5c-5a59bc6ee3c5",
+		"name": "Fiap/Alura - Tech Challenge - Fase 02",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "9250904"
+	},
+	"item": [
+		{
+			"name": "00 - Autenticate",
+			"item": [
+				{
+					"name": "01 - POST authenticate",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"thomas.anderson@itcompany.com.br\",\n    \"password\": \"@Bcd1234\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:8080/authenticate"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "01 - User/Driver",
+			"item": [
+				{
+					"name": "01 - Create new Users/Drivers",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Morpheus\",\n    \"email\": \"morpheus@matrix.com\",\n    \"cpf\": \"92477979000\",\n    \"password\": \"@Bcd1234\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:8080/users"
+					},
+					"response": []
+				},
+				{
+					"name": "02 - Find all users paginated",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{auth_token}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "localhost:8080/users"
+					},
+					"response": []
+				},
+				{
+					"name": "03 - Update users",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{auth_token}}"
+							}
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Agent Smith\",\n    \"email\": \"agent.smith@matrix.com\",\n    \"cpf\": \"28492740035\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:8080/users/1da376cc-25e1-43f9-a143-c612843ac957"
+					},
+					"response": []
+				},
+				{
+					"name": "04 - Find users by name or email",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{auth_token}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/users/user-name-email?name=Thomas",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"users",
+								"user-name-email"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "Thomas"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "05 - Find user by ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aG9tYXMuYW5kZXJzb25AaXRjb21wYW55LmNvbSIsImlzcyI6IkFQSSBEaWdpdGFsIFBhcmtpbmciLCJuYW1lIjoiVGhvbWFzIEFuZGVyc29uIiwiZXhwIjoxNzA2NDQ5OTU1fQ.ZkiZbd97cf-TasSz-EUNpnMC4HsAlPZuXbUD-cudbxc"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "localhost:8080/users/cdd0724e-3f51-4ace-8d5f-11b3277a3532"
+					},
+					"response": []
+				},
+				{
+					"name": "06 - Delete user by ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{auth_token}}"
+							}
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": "localhost:8080/users/a6a96e02-ba83-4f2a-a064-b544904ace6a"
+					},
+					"response": []
+				},
+				{
+					"name": "07 - Partial update user/driver default payment method",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{auth_token}}"
+							}
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"paymentMethod\": \"CREDIT_CARD\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:8080/users/6ceb6773-6175-4b9f-b5b9-bd0ef895f050"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "02 - Vehicle",
+			"item": [
+				{
+					"name": "01 - Create new vehicle",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{auth_token}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"description\": \"Fiat Pulse\",\n    \"licensePlate\": \"ABC-1E55\",\n    \"color\": \"Blue\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:8080/vehicles"
+					},
+					"response": []
+				},
+				{
+					"name": "02 - Find vehicle by ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{auth_token}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "localhost:8080/vehicles/1f6e9ddb-e4f1-44ed-bb31-6c5315ae69f6"
+					},
+					"response": []
+				},
+				{
+					"name": "03 - Update vehicle",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{auth_token}}"
+							}
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"description\": \"Jeep Compass\",\n    \"licensePlate\": \"ABC-3E44\",\n    \"color\": \"black\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:8080/vehicles/5800175c-e524-4358-8812-c00e550c0601"
+					},
+					"response": []
+				},
+				{
+					"name": "04 - Delete vehicle by ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{auth_token}}"
+							}
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": "localhost:8080/vehicles/b7835465-41d8-4e39-be7b-c2fe6c220cc6"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "03 - Parking",
+			"item": [
+				{
+					"name": "01 - Create new parking",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{auth_token}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"vehicleId\": \"1f6e9ddb-e4f1-44ed-bb31-6c5315ae69f6\",\n    \"latitude\": \"-23.56404\",\n    \"longitude\": \"-46.65219\",\n    \"street\": \"Av Paulista, n. 1000\",\n    \"neighborhood\": \"Bela Vista\",\n    \"city\": \"São Paulo\",\n    \"state\": \"SP\",\n    \"country\": \"Brasil\",\n    \"parkingType\": \"FLEX\",\n    \"parkingTime\": \"Unlimited\",\n    \"paymentMethod\": \"CREDIT_CARD\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:8080/parking"
+					},
+					"response": []
+				},
+				{
+					"name": "02 - Find parking by ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{auth_token}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "localhost:8080/parking/feea1d11-11b9-4e34-9848-e1174bb857e3"
+					},
+					"response": []
+				},
+				{
+					"name": "03 - Update parking",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var current_timestamp = new Date();",
+									"postman.setEnvironmentVariable(\"current_timestamp\", current_timestamp.toISOString());",
+									"console.log(`${current_timestamp.toISOString()}`);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{auth_token}}"
+							}
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"vehicleId\": \"1f6e9ddb-e4f1-44ed-bb31-6c5315ae69f6\",\n    \"latitude\": \"-23.56404\",\n    \"longitude\": \"-46.65219\",\n    \"street\": \"Av Paulista, n. 1000\",\n    \"neighborhood\": \"Bela Vista\",\n    \"city\": \"São Paulo\",\n    \"state\": \"SP\",\n    \"country\": \"Brasil\",\n    \"parkingState\": \"BUSY\",\n    \"parkingType\": \"FIXED\",\n    \"parkingTime\": \"2-Hours\",\n    \"initialParking\": \"2024-01-28T10:15:52.522561979\",\n    \"finalParking\": \"2024-01-28T12:15:52.522561979\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:8080/parking/feea1d11-11b9-4e34-9848-e1174bb857e3"
+					},
+					"response": []
+				},
+				{
+					"name": "04 - Create/Update parking payment",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{auth_token}}"
+							}
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"paymentMethod\": \"PIX\",\n    \"paymentValue\": \"10.00\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:8080/parking/feea1d11-11b9-4e34-9848-e1174bb857e3/payment"
+					},
+					"response": []
+				},
+				{
+					"name": "05 - Update parking close",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{auth_token}}"
+							}
+						},
+						"method": "PUT",
+						"header": [],
+						"url": "localhost:8080/parking/feea1d11-11b9-4e34-9848-e1174bb857e3/close"
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
