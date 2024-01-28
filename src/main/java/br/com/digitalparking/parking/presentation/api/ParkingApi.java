@@ -1,82 +1,89 @@
 package br.com.digitalparking.parking.presentation.api;
 
-import br.com.digitalparking.parking.application.usecase.CreateOrUpdateParkingPaymentUseCase;
-import br.com.digitalparking.parking.application.usecase.CreateParkingUseCase;
-import br.com.digitalparking.parking.application.usecase.GetParkingByIdUseCase;
-import br.com.digitalparking.parking.application.usecase.UpdateParkingStateCloseUseCase;
-import br.com.digitalparking.parking.application.usecase.UpdateParkingUseCase;
 import br.com.digitalparking.parking.presentation.dto.ParkingInputDto;
 import br.com.digitalparking.parking.presentation.dto.ParkingOutputDto;
 import br.com.digitalparking.parking.presentation.dto.ParkingPaymentInputDto;
 import br.com.digitalparking.parking.presentation.dto.ParkingUpdateInputDto;
-import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
-@RestController
-@RequestMapping("/parking")
-public class ParkingApi {
+public interface ParkingApi {
 
-  private final CreateParkingUseCase createParkingUseCase;
-  private final GetParkingByIdUseCase getParkingByIdUseCase;
-  private final UpdateParkingUseCase updateParkingUseCase;
-  private final CreateOrUpdateParkingPaymentUseCase createOrUpdateParkingPaymentUseCase;
-  private final UpdateParkingStateCloseUseCase updateParkingStateCloseUseCase;
+  @Operation(summary = "Cadastro de estacionamento de veículo",
+      description = "Endpoint para cadastrar novo estacionamento de veículo, vinculado ao usuário logado no aplicativo",
+      tags = {"ParkingApi"})
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "201", description = "successful operation",
+          content = {
+              @Content(mediaType = "application/json", schema = @Schema(implementation = ParkingOutputDto.class))}),
+      @ApiResponse(responseCode = "400", description = "bad request para validação de método de pagamento preferido do usuário não cadastrado, para validação de tempo fixo escolhido, sem definição da quantidade de horas de estacionamento ou pagamento via PIX para período de estacionamento flexível",
+          content = {@Content(schema = @Schema(hidden = true))}),
+      @ApiResponse(responseCode = "404", description = "not found para veículo não encontrado",
+          content = {@Content(schema = @Schema(hidden = true))})
+  })
+  ParkingOutputDto postParking(
+      @Parameter(description = "DTO com atributos para se cadastrar um novo estacionamento de veículo. Requer validação de dados informados, como veículo, rua, bairro, cidade, Estado, país e tipo de estacionamento (tempo fixo ou flexível)")
+      ParkingInputDto parkingInputDto);
 
-  public ParkingApi(CreateParkingUseCase createParkingUseCase,
-      GetParkingByIdUseCase getParkingByIdUseCase, UpdateParkingUseCase updateParkingUseCase,
-      CreateOrUpdateParkingPaymentUseCase createOrUpdateParkingPaymentUseCase,
-      UpdateParkingStateCloseUseCase updateParkingStateCloseUseCase) {
-    this.createParkingUseCase = createParkingUseCase;
-    this.getParkingByIdUseCase = getParkingByIdUseCase;
-    this.updateParkingUseCase = updateParkingUseCase;
-    this.createOrUpdateParkingPaymentUseCase = createOrUpdateParkingPaymentUseCase;
-    this.updateParkingStateCloseUseCase = updateParkingStateCloseUseCase;
-  }
+  @Operation(summary = "Recupera um estacionamento de veículo",
+      description = "Endpoint para recuperar um estacionamento de veículo pelo ID cadastrado",
+      tags = {"ParkingApi"})
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "successful operation", content = {
+          @Content(mediaType = "application/json", schema = @Schema(implementation = ParkingOutputDto.class))}),
+      @ApiResponse(responseCode = "404", description = "not found para estacionamento de veículo não encontrado",
+          content = {@Content(schema = @Schema(hidden = true))})})
+  ParkingOutputDto getParkingById(
+      @Parameter(description = "UUID válido do estacionamento do veículo")
+      String uuid);
 
-  @PostMapping
-  @ResponseStatus(HttpStatus.CREATED)
-  public ParkingOutputDto postParking(@RequestBody @Valid ParkingInputDto parkingInputDto) {
-    var parking = ParkingInputDto.to(parkingInputDto);
-    var parkingSaved = createParkingUseCase.execute(parking);
-    return ParkingOutputDto.from(parkingSaved);
-  }
+  @Operation(summary = "Atualiza estacionamento de veículo",
+      description = "Endpoint para atualizar dados do estacionamento de um veículo",
+      tags = {"ParkingApi"})
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "202", description = "successful operation", content = {
+          @Content(mediaType = "application/json", schema = @Schema(implementation = ParkingOutputDto.class))}),
+      @ApiResponse(responseCode = "400", description = "bad request para UUID inválido",
+          content = {@Content(schema = @Schema(hidden = true))}),
+      @ApiResponse(responseCode = "404", description = "not found para estacionamento de veículo, ou veículo não encontrado",
+          content = {@Content(schema = @Schema(hidden = true))})})
+  ParkingOutputDto putParking(
+      @Parameter(description = "UUID válido do estacionamento do veículo")
+      String uuid,
+      @Parameter(description = "DTO com atributos para se atualizar o estacionamento de veículo. Requer validação de dados informados, como veículo, rua, bairro, cidade, Estado, país e tipo de estacionamento (tempo fixo ou flexível)")
+      ParkingUpdateInputDto parkingUpdateInputDto);
 
-  @GetMapping("/{uuid}")
-  @ResponseStatus(HttpStatus.OK)
-  public ParkingOutputDto getParkingById(@PathVariable String uuid) {
-    var parking = getParkingByIdUseCase.execute(uuid);
-    return ParkingOutputDto.from(parking);
-  }
+  @Operation(summary = "Realiza o pagamento do estacionamento de veículo",
+      description = "Endpoint para realizar o pagamento do estacionamento de um veículo",
+      tags = {"ParkingApi"})
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "202", description = "successful operation", content = {
+          @Content(mediaType = "application/json", schema = @Schema(implementation = ParkingOutputDto.class))}),
+      @ApiResponse(responseCode = "400", description = "bad request para UUID inválido",
+          content = {@Content(schema = @Schema(hidden = true))}),
+      @ApiResponse(responseCode = "404", description = "not found para estacionamento de veículo, ou veículo não encontrado",
+          content = {@Content(schema = @Schema(hidden = true))})})
+  ParkingOutputDto putParkingPayment(
+      @Parameter(description = "UUID válido do estacionamento do veículo")
+      String uuid,
+      @Parameter(description = "DTO com atributos para se atualizar o pagamento do estacionamento de veículo")
+      ParkingPaymentInputDto parkingPaymentInputDto);
 
-  @PutMapping("/{uuid}")
-  @ResponseStatus(HttpStatus.ACCEPTED)
-  public ParkingOutputDto putParking(@PathVariable String uuid,
-      @RequestBody @Valid ParkingUpdateInputDto parkingUpdateInputDto) {
-    var parking = ParkingUpdateInputDto.to(parkingUpdateInputDto);
-    var parkingUpdated = updateParkingUseCase.execute(uuid, parking);
-    return ParkingOutputDto.from(parkingUpdated);
-  }
-
-  @PutMapping("/{uuid}/payment")
-  @ResponseStatus(HttpStatus.ACCEPTED)
-  public ParkingOutputDto putParkingPayment(@PathVariable String uuid,
-      @RequestBody @Valid ParkingPaymentInputDto parkingPaymentInputDto) {
-    var parkingPayment = ParkingPaymentInputDto.to(parkingPaymentInputDto);
-    var parkingSaved = createOrUpdateParkingPaymentUseCase.execute(uuid, parkingPayment);
-    return ParkingOutputDto.from(parkingSaved);
-  }
-
-  @PutMapping("/{uuid}/close")
-  @ResponseStatus(HttpStatus.NO_CONTENT)
-  public void putParkingStateClosed(@PathVariable String uuid) {
-    updateParkingStateCloseUseCase.execute(uuid);
-  }
+  @Operation(summary = "Realiza o encerramento do estacionamento de veículo",
+      description = "Endpoint para realizar o encerramento do estacionamento de um veículo",
+      tags = {"ParkingApi"})
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "202", description = "successful operation", content = {
+          @Content(mediaType = "application/json", schema = @Schema(implementation = ParkingOutputDto.class))}),
+      @ApiResponse(responseCode = "400", description = "bad request para UUID inválido",
+          content = {@Content(schema = @Schema(hidden = true))}),
+      @ApiResponse(responseCode = "404", description = "not found para estacionamento de veículo, ou veículo não encontrado",
+          content = {@Content(schema = @Schema(hidden = true))})})
+  void putParkingStateClosed(
+      @Parameter(description = "UUID válido do estacionamento do veículo")
+      String uuid);
 }
