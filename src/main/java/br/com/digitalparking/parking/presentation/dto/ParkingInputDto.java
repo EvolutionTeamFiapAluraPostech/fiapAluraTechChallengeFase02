@@ -3,7 +3,6 @@ package br.com.digitalparking.parking.presentation.dto;
 import br.com.digitalparking.parking.model.entity.Parking;
 import br.com.digitalparking.parking.model.enums.ParkingTime;
 import br.com.digitalparking.parking.model.enums.ParkingType;
-import br.com.digitalparking.user.model.entity.User;
 import br.com.digitalparking.vehicle.model.entity.Vehicle;
 import jakarta.validation.constraints.NotBlank;
 import java.math.BigDecimal;
@@ -13,8 +12,6 @@ import org.springframework.util.StringUtils;
 public record ParkingInputDto(
     @NotBlank
     String vehicleId,
-    @NotBlank
-    String userId,
     String latitude,
     String longitude,
     @NotBlank
@@ -33,7 +30,6 @@ public record ParkingInputDto(
 
   public static Parking to(ParkingInputDto parkingInputDto) {
     var vehicle = Vehicle.builder().id(UUID.fromString(parkingInputDto.vehicleId)).build();
-    var user = User.builder().id(UUID.fromString(parkingInputDto.userId)).build();
     var latitude =
         parkingInputDto.latitude != null ? new BigDecimal(parkingInputDto.latitude) : null;
     var longitude =
@@ -46,7 +42,6 @@ public record ParkingInputDto(
 
     return Parking.builder()
         .vehicle(vehicle)
-        .user(user)
         .latitude(latitude)
         .longitude(longitude)
         .street(parkingInputDto.street)
