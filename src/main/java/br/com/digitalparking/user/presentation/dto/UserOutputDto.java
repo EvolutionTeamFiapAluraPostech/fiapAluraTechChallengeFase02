@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
 
-@Tag(name = "UserOutputDto", description = "DTO de saída represetação de um usuário")
+@Tag(name = "UserOutputDto", description = "DTO de saída para representação de um usuário")
 public record UserOutputDto(
     @Schema(example = "feea1d11-11b9-4e34-9848-e1174bb857e3", description = "Valid UUID")
     String id,
