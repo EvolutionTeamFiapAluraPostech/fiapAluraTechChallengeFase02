@@ -75,7 +75,7 @@ class PutParkingApiTest {
   private String createParkingInput(User user, Vehicle vehicle) {
     var initialParking = LocalDateTime.now();
     var finalParking = initialParking.plusHours(
-        ParkingTime.valueOfDescription(DEFAULT_PARKING_TIME).getHour());
+        ParkingTime.valueOf(DEFAULT_PARKING_TIME).getHour());
     return PARKING_UPDATE_TEMPLATE_INPUT.formatted(
         vehicle.getId().toString(), user.getId().toString(), ALTERNATE_PARKING_LATITUDE,
         ALTERNATE_PARKING_LONGITUDE, ALTERNATE_PARKING_STREET, ALTERNATE_PARKING_NEIGHBORHOOD,

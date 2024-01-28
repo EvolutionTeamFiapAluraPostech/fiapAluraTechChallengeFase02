@@ -31,7 +31,7 @@ public final class ParkingTestData {
   public static final String DEFAULT_PARKING_STATE = "SP";
   public static final String DEFAULT_PARKING_COUNTRY = "Brasil";
   public static final ParkingType DEFAULT_PARKING_TYPE = FIXED;
-  public static final String DEFAULT_PARKING_TIME = "2-Hours";
+  public static final String DEFAULT_PARKING_TIME = "TWO";
   public static final ParkingState DEFAULT_PARKING_PARKING_STATE = BUSY;
   public static final PaymentMethod DEFAULT_PARKING_PAYMENT_METHOD = CREDIT_CARD;
   public static final BigDecimal DEFAULT_PARKING_PAYMENT_VALUE = new BigDecimal("5.00");
@@ -68,7 +68,7 @@ public final class ParkingTestData {
 
   public static Parking createNewParkingWith(User user, Vehicle vehicle) {
     var initialParking = LocalDateTime.now();
-    var parkingTime = ParkingTime.valueOfDescription(DEFAULT_PARKING_TIME);
+    var parkingTime = ParkingTime.valueOf(DEFAULT_PARKING_TIME);
     var finalParking = initialParking.plusHours(parkingTime.getHour());
 
     return Parking.builder()

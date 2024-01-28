@@ -87,7 +87,7 @@ class PostParkingApiTest {
         vehicle.getId().toString(), user.getId().toString(), DEFAULT_PARKING_LATITUDE,
         DEFAULT_PARKING_LONGITUDE, DEFAULT_PARKING_STREET, DEFAULT_PARKING_NEIGHBORHOOD,
         DEFAULT_PARKING_CITY, DEFAULT_PARKING_STATE, DEFAULT_PARKING_COUNTRY,
-        parkingType.name(), parkingTime.getDescription());
+        parkingType.name(), parkingTime.name());
   }
 
   @Test

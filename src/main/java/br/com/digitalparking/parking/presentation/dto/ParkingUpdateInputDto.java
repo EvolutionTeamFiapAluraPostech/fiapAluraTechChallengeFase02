@@ -41,7 +41,7 @@ public record ParkingUpdateInputDto(
         parkingInputDto.longitude != null ? new BigDecimal(parkingInputDto.longitude) : null;
     var hour = 0;
     if (StringUtils.hasLength(parkingInputDto.parkingTime)) {
-      var parkingTime = ParkingTime.valueOfDescription(parkingInputDto.parkingTime);
+      var parkingTime = ParkingTime.valueOf(parkingInputDto.parkingTime);
       hour = parkingTime.getHour();
     }
 

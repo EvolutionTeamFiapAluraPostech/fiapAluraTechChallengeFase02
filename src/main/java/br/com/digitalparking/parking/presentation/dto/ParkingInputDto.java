@@ -36,7 +36,7 @@ public record ParkingInputDto(
     @Schema(example = "FIXED, FLEX", description = "Tipo de estacionamento, com horário fixo ou flexível")
     @NotBlank
     String parkingType,
-    @Schema(example = "1 ou 2", description = "Se o tipo de estacionamento escolhido for FIXED, será a quantidade de horas que o veículo permanecerá estacionado. Se o tipo de estacionamento escolhido for FLEX, a quantidade será indeterminada")
+    @Schema(example = "ONE, TWO, UNLIMITED", description = "Se o tipo de estacionamento escolhido for FIXED, será a quantidade de horas que o veículo permanecerá estacionado. Se o tipo de estacionamento escolhido for FLEX, a quantidade será indeterminada")
     String parkingTime) {
 
   public static Parking to(ParkingInputDto parkingInputDto) {
@@ -47,7 +47,7 @@ public record ParkingInputDto(
         parkingInputDto.longitude != null ? new BigDecimal(parkingInputDto.longitude) : null;
     var hour = 0;
     if (StringUtils.hasLength(parkingInputDto.parkingTime)) {
-      var parkingTime = ParkingTime.valueOfDescription(parkingInputDto.parkingTime);
+      var parkingTime = ParkingTime.valueOf(parkingInputDto.parkingTime);
       hour = parkingTime.getHour();
     }
 
