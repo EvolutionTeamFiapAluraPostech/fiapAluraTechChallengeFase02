@@ -31,6 +31,7 @@ Repositório do projeto da pós tech da FIAP/ALURA. Desenvolvimento de uma solu�
 8. JUnit
 9. TestContainers
 10. Wiremock
+11. Docker
 
 # Setup do Projeto
 
