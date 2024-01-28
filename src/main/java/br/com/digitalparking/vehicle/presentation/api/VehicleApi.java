@@ -1,69 +1,70 @@
 package br.com.digitalparking.vehicle.presentation.api;
 
-import br.com.digitalparking.vehicle.application.usecase.CreateVehicleUseCase;
-import br.com.digitalparking.vehicle.application.usecase.DeleteVehicleByIdUseCase;
-import br.com.digitalparking.vehicle.application.usecase.GetVehicleByIdAndUserUseCase;
-import br.com.digitalparking.vehicle.application.usecase.UpdateVehicleUseCase;
+import br.com.digitalparking.user.presentation.dto.UserOutputDto;
 import br.com.digitalparking.vehicle.presentation.dto.VehicleInputDto;
 import br.com.digitalparking.vehicle.presentation.dto.VehicleOutputDto;
-import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
-@RestController
-@RequestMapping("/vehicles")
-public class VehicleApi {
+@Tag(name = "VehicleApi", description = "API de cadastro de veículos")
+public interface VehicleApi {
 
-  private final CreateVehicleUseCase createVehicleUseCase;
-  private final GetVehicleByIdAndUserUseCase getVehicleByIdAndUserUseCase;
-  private final UpdateVehicleUseCase updateVehicleUseCase;
-  private final DeleteVehicleByIdUseCase deleteVehicleByIdUseCase;
+  @Operation(summary = "Cadastro de veículos",
+      description = "Endpoint para cadastrar novos veículos. Cada veículo cadastrado será vinculado ao usuário logado no aplicativo",
+      tags = {"VehicleApi"})
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "201", description = "successful operation",
+          content = {
+              @Content(mediaType = "application/json", schema = @Schema(implementation = VehicleOutputDto.class))}),
+      @ApiResponse(responseCode = "400", description = "bad request para validação de descrição, placa e cor do veículo",
+          content = {@Content(schema = @Schema(hidden = true))})})
+  VehicleOutputDto postVehicle(
+      @Parameter(description = "DTO com atributos para se cadastrar um novo veículo. Requer validação de dados informados, como descrição, placa e cor do véiculo")
+      VehicleInputDto vehicleInputDto);
 
-  public VehicleApi(CreateVehicleUseCase createVehicleUseCase,
-      GetVehicleByIdAndUserUseCase getVehicleByIdAndUserUseCase,
-      UpdateVehicleUseCase updateVehicleUseCase,
-      DeleteVehicleByIdUseCase deleteVehicleByIdUseCase) {
-    this.createVehicleUseCase = createVehicleUseCase;
-    this.getVehicleByIdAndUserUseCase = getVehicleByIdAndUserUseCase;
-    this.updateVehicleUseCase = updateVehicleUseCase;
-    this.deleteVehicleByIdUseCase = deleteVehicleByIdUseCase;
-  }
+  @Operation(summary = "Recupera um veículo",
+      description = "Endpoint para recuperar um veículo pelo ID cadastrado",
+      tags = {"VehicleApi"})
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "successful operation", content = {
+          @Content(mediaType = "application/json", schema = @Schema(implementation = UserOutputDto.class))}),
+      @ApiResponse(responseCode = "404", description = "not found para usuário não encontrado",
+          content = {@Content(schema = @Schema(hidden = true))})})
+  VehicleOutputDto getVehicleById(
+      @Parameter(description = "UUID válido do veículo")
+      String vehicleId);
 
-  @PostMapping
-  @ResponseStatus(HttpStatus.CREATED)
-  public VehicleOutputDto postVehicle(@RequestBody @Valid VehicleInputDto vehicleInputDto) {
-    var vehicle = VehicleInputDto.toVehicle(vehicleInputDto);
-    var vehicleCreated = createVehicleUseCase.execute(vehicle);
-    return VehicleOutputDto.from(vehicleCreated);
-  }
+  @Operation(summary = "Atualiza veículo",
+      description = "Endpoint para atualizar dados do veículo",
+      tags = {"VehicleApi"})
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "202", description = "successful operation", content = {
+          @Content(mediaType = "application/json", schema = @Schema(implementation = VehicleOutputDto.class))}),
+      @ApiResponse(responseCode = "400", description = "bad request para UUID inválido",
+          content = {@Content(schema = @Schema(hidden = true))}),
+      @ApiResponse(responseCode = "404", description = "not found para veículo não encontrado",
+          content = {@Content(schema = @Schema(hidden = true))}),
+      @ApiResponse(responseCode = "409", description = "conflic para placa do veículo já cadastrado para o usuário logado no aplicativo",
+          content = {@Content(schema = @Schema(hidden = true))})})
+  VehicleOutputDto putVehicle(
+      @Parameter(description = "UUID válido do veículo")
+      String vehicleUuid,
+      @Parameter(description = "DTO com atributos para se atualizar um veículo já cadastrado. Requer validação de dados informados, como descrição, placa e cor do véiculo")
+      VehicleInputDto vehicleInputDto);
 
-  @GetMapping("/{vehicleId}")
-  @ResponseStatus(HttpStatus.OK)
-  public VehicleOutputDto getVehicleById(@PathVariable String vehicleId) {
-    var vehicle = getVehicleByIdAndUserUseCase.execute(vehicleId);
-    return VehicleOutputDto.from(vehicle);
-  }
-
-  @PutMapping("/{vehicleUuid}")
-  @ResponseStatus(HttpStatus.ACCEPTED)
-  public VehicleOutputDto putVehicle(@PathVariable String vehicleUuid,
-      @RequestBody @Valid VehicleInputDto vehicleInputDto) {
-    var vehicle = VehicleInputDto.toVehicle(vehicleInputDto);
-    var vehicleUpdated = updateVehicleUseCase.execute(vehicleUuid, vehicle);
-    return VehicleOutputDto.from(vehicleUpdated);
-  }
-
-  @DeleteMapping("/{vehicleUuid}")
-  @ResponseStatus(HttpStatus.NO_CONTENT)
-  public void deleteVehicle(@PathVariable String vehicleUuid) {
-    deleteVehicleByIdUseCase.execute(vehicleUuid);
-  }
+  @Operation(summary = "Exclui veículo",
+      description = "Endpoint para excluir veículo. A exclusão é feita por soft delete",
+      tags = {"VehicleApi"})
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "successful operation"),
+      @ApiResponse(responseCode = "400", description = "bad request para UUID inválido",
+          content = {@Content(schema = @Schema(hidden = true))}),
+      @ApiResponse(responseCode = "404", description = "not found para veículo não encontrado",
+          content = {@Content(schema = @Schema(hidden = true))})})
+  void deleteVehicle(@Parameter(description = "UUID válido do veículo") String vehicleUuid);
 }
