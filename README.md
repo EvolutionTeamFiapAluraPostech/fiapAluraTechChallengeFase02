@@ -54,3 +54,6 @@ Content-Length: 76
 "email": "thomas.anderson@itcompany.com",
 "password": "@Bcd1234"
 }
+
+# Documentação da API
+http://localhost:8080/swagger-ui/index.html
