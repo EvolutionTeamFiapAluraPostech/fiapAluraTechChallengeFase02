@@ -20,19 +20,20 @@ Repositório do projeto da pós tech da FIAP/ALURA. Desenvolvimento de uma solu�
 1. Java 17
 2. Spring Boot 3.1.2
 3. Spring Security
-3. Spring Web MVC
-4. Spring Data JPA
-5. Spring Bean Validation
-6. Spring Open Feign
-7. Spring Doc Open API
-5. Lombok
-6. Postgres 15.1
-7. Flyway
-8. JUnit
-9. Mockito
-9. TestContainers
-10. Wiremock
-11. Docker
+4. Spring Web MVC
+5. Spring Data JPA
+6. Spring Bean Validation
+7. Spring Open Feign
+8. Spring Doc Open API
+9. Lombok
+10. Postgres 15.1
+11. Flyway
+12. JUnit
+13. Mockito
+14. TestContainers
+15. Wiremock
+16. Docker
+17. Ethereal - fake SMTP
 
 # Setup do Projeto
 
