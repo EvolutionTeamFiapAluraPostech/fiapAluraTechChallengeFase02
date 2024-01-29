@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
 
 @Tag(name = "VehicleApi", description = "API de cadastro de veículos")
 public interface VehicleApi {
@@ -67,4 +68,12 @@ public interface VehicleApi {
       @ApiResponse(responseCode = "404", description = "not found para veículo não encontrado",
           content = {@Content(schema = @Schema(hidden = true))})})
   void deleteVehicle(@Parameter(description = "UUID válido do veículo") String vehicleUuid);
+
+  @Operation(summary = "Lista de veículos do usuário autenticado",
+      description = "Endpoint para recuperar uma lista de veículos do usuário autenticado no aplicativo",
+      tags = {"VehicleApi"})
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "successful operation", content = {
+          @Content(mediaType = "application/json", schema = @Schema(implementation = VehicleOutputDto.class))})})
+  List<VehicleOutputDto> getAllVehicles();
 }

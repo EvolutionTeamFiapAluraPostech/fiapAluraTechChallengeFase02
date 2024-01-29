@@ -3,6 +3,7 @@ package br.com.digitalparking.vehicle.presentation.dto;
 import br.com.digitalparking.vehicle.model.entity.Vehicle;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
 
 @Tag(name = "VehicleOutputDto", description = "DTO de saída para representação de um veículo")
 public record VehicleOutputDto(
@@ -22,5 +23,9 @@ public record VehicleOutputDto(
 
   public static VehicleOutputDto from(Vehicle vehicleCreated) {
     return new VehicleOutputDto(vehicleCreated);
+  }
+
+  public static List<VehicleOutputDto> toList(List<Vehicle> vehicles) {
+    return vehicles.stream().map(VehicleOutputDto::new).toList();
   }
 }

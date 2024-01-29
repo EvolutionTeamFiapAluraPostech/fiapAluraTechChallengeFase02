@@ -2,11 +2,13 @@ package br.com.digitalparking.vehicle.presentation.api;
 
 import br.com.digitalparking.vehicle.application.usecase.CreateVehicleUseCase;
 import br.com.digitalparking.vehicle.application.usecase.DeleteVehicleByIdUseCase;
+import br.com.digitalparking.vehicle.application.usecase.GetAllVehiclesByUserUseCase;
 import br.com.digitalparking.vehicle.application.usecase.GetVehicleByIdAndUserUseCase;
 import br.com.digitalparking.vehicle.application.usecase.UpdateVehicleUseCase;
 import br.com.digitalparking.vehicle.presentation.dto.VehicleInputDto;
 import br.com.digitalparking.vehicle.presentation.dto.VehicleOutputDto;
 import jakarta.validation.Valid;
+import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,15 +28,18 @@ public class VehicleController implements VehicleApi{
   private final GetVehicleByIdAndUserUseCase getVehicleByIdAndUserUseCase;
   private final UpdateVehicleUseCase updateVehicleUseCase;
   private final DeleteVehicleByIdUseCase deleteVehicleByIdUseCase;
+  private final GetAllVehiclesByUserUseCase getAllVehiclesByUserUseCase;
 
   public VehicleController(CreateVehicleUseCase createVehicleUseCase,
       GetVehicleByIdAndUserUseCase getVehicleByIdAndUserUseCase,
       UpdateVehicleUseCase updateVehicleUseCase,
-      DeleteVehicleByIdUseCase deleteVehicleByIdUseCase) {
+      DeleteVehicleByIdUseCase deleteVehicleByIdUseCase,
+      GetAllVehiclesByUserUseCase getAllVehiclesByUserUseCase) {
     this.createVehicleUseCase = createVehicleUseCase;
     this.getVehicleByIdAndUserUseCase = getVehicleByIdAndUserUseCase;
     this.updateVehicleUseCase = updateVehicleUseCase;
     this.deleteVehicleByIdUseCase = deleteVehicleByIdUseCase;
+    this.getAllVehiclesByUserUseCase = getAllVehiclesByUserUseCase;
   }
 
   @PostMapping
@@ -65,5 +70,13 @@ public class VehicleController implements VehicleApi{
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void deleteVehicle(@PathVariable String vehicleUuid) {
     deleteVehicleByIdUseCase.execute(vehicleUuid);
+  }
+
+  @Override
+  @GetMapping
+  @ResponseStatus(HttpStatus.OK)
+  public List<VehicleOutputDto> getAllVehicles() {
+    var vehicles = getAllVehiclesByUserUseCase.execute();
+    return VehicleOutputDto.toList(vehicles);
   }
 }
