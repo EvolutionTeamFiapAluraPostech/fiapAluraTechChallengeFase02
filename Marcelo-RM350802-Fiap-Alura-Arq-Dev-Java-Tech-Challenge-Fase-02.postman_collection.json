@@ -16,7 +16,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"thomas.anderson@itcompany.com.br\",\n    \"password\": \"@Bcd1234\"\n}",
+							"raw": "{\n    \"email\": \"thomas.anderson@itcompany.com\",\n    \"password\": \"@Bcd1234\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -166,14 +166,14 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"paymentMethod\": \"CREDIT_CARD\"\n}",
+							"raw": "{\n    \"paymentMethod\": \"PIX\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
 								}
 							}
 						},
-						"url": "localhost:8080/users/6ceb6773-6175-4b9f-b5b9-bd0ef895f050"
+						"url": "localhost:8080/users/d97fa35d-ce01-4b05-8b06-6d4099487aed"
 					},
 					"response": []
 				}
@@ -195,7 +195,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"description\": \"Fiat Pulse\",\n    \"licensePlate\": \"ABC-1E55\",\n    \"color\": \"Blue\"\n}",
+							"raw": "{\n    \"description\": \"Honda HRV\",\n    \"licensePlate\": \"ABC-1E55\",\n    \"color\": \"Silver\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -217,7 +217,7 @@
 						},
 						"method": "GET",
 						"header": [],
-						"url": "localhost:8080/vehicles/1f6e9ddb-e4f1-44ed-bb31-6c5315ae69f6"
+						"url": "localhost:8080/vehicles/939f57c9-205e-4ee9-b908-5b7419235745"
 					},
 					"response": []
 				},
@@ -259,6 +259,21 @@
 						"url": "localhost:8080/vehicles/b7835465-41d8-4e39-be7b-c2fe6c220cc6"
 					},
 					"response": []
+				},
+				{
+					"name": "05 - Find all vehicles by user authenticated",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{auth_token}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "localhost:8080/vehicles"
+					},
+					"response": []
 				}
 			]
 		},
@@ -278,7 +293,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"vehicleId\": \"1f6e9ddb-e4f1-44ed-bb31-6c5315ae69f6\",\n    \"latitude\": \"-23.56404\",\n    \"longitude\": \"-46.65219\",\n    \"street\": \"Av Paulista, n. 1000\",\n    \"neighborhood\": \"Bela Vista\",\n    \"city\": \"São Paulo\",\n    \"state\": \"SP\",\n    \"country\": \"Brasil\",\n    \"parkingType\": \"FLEX\",\n    \"parkingTime\": \"Unlimited\",\n    \"paymentMethod\": \"CREDIT_CARD\"\n}",
+							"raw": "{\n    \"vehicleId\": \"1f6e9ddb-e4f1-44ed-bb31-6c5315ae69f6\",\n    \"latitude\": \"-23.56404\",\n    \"longitude\": \"-46.65219\",\n    \"street\": \"Av Paulista, n. 1000\",\n    \"neighborhood\": \"Bela Vista\",\n    \"city\": \"São Paulo\",\n    \"state\": \"SP\",\n    \"country\": \"Brasil\",\n    \"parkingType\": \"FIXED\",\n    \"parkingTime\": \"ONE\",\n    \"paymentMethod\": \"CREDIT_CARD\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -300,7 +315,7 @@
 						},
 						"method": "GET",
 						"header": [],
-						"url": "localhost:8080/parking/feea1d11-11b9-4e34-9848-e1174bb857e3"
+						"url": "localhost:8080/parking/b34e96ab-8ab8-4b35-a256-43739a8e6802"
 					},
 					"response": []
 				},
@@ -330,14 +345,14 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"vehicleId\": \"1f6e9ddb-e4f1-44ed-bb31-6c5315ae69f6\",\n    \"latitude\": \"-23.56404\",\n    \"longitude\": \"-46.65219\",\n    \"street\": \"Av Paulista, n. 1000\",\n    \"neighborhood\": \"Bela Vista\",\n    \"city\": \"São Paulo\",\n    \"state\": \"SP\",\n    \"country\": \"Brasil\",\n    \"parkingState\": \"BUSY\",\n    \"parkingType\": \"FIXED\",\n    \"parkingTime\": \"2-Hours\",\n    \"initialParking\": \"2024-01-28T10:15:52.522561979\",\n    \"finalParking\": \"2024-01-28T12:15:52.522561979\"\n}",
+							"raw": "{\n    \"vehicleId\": \"1f6e9ddb-e4f1-44ed-bb31-6c5315ae69f6\",\n    \"latitude\": \"-23.56404\",\n    \"longitude\": \"-46.65219\",\n    \"street\": \"Av Paulista, n. 1000\",\n    \"neighborhood\": \"Bela Vista\",\n    \"city\": \"São Paulo\",\n    \"state\": \"SP\",\n    \"country\": \"Brasil\",\n    \"parkingState\": \"BUSY\",\n    \"parkingType\": \"FIXED\",\n    \"parkingTime\": \"TWO\",\n    \"initialParking\": \"2024-01-29T20:36:52.522561979\",\n    \"finalParking\": \"2024-01-29T22:36:52.522561979\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
 								}
 							}
 						},
-						"url": "localhost:8080/parking/feea1d11-11b9-4e34-9848-e1174bb857e3"
+						"url": "localhost:8080/parking/b34e96ab-8ab8-4b35-a256-43739a8e6802"
 					},
 					"response": []
 				},
@@ -354,14 +369,14 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"paymentMethod\": \"PIX\",\n    \"paymentValue\": \"10.00\"\n}",
+							"raw": "{\n    \"paymentMethod\": \"CREDIT_CARD\",\n    \"paymentValue\": \"10.00\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
 								}
 							}
 						},
-						"url": "localhost:8080/parking/feea1d11-11b9-4e34-9848-e1174bb857e3/payment"
+						"url": "localhost:8080/parking/b34e96ab-8ab8-4b35-a256-43739a8e6802/payment"
 					},
 					"response": []
 				},
@@ -376,7 +391,7 @@
 						},
 						"method": "PUT",
 						"header": [],
-						"url": "localhost:8080/parking/feea1d11-11b9-4e34-9848-e1174bb857e3/close"
+						"url": "localhost:8080/parking/b34e96ab-8ab8-4b35-a256-43739a8e6802/close"
 					},
 					"response": []
 				}
