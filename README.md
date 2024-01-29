@@ -57,3 +57,6 @@ Content-Length: 76
 
 # Documentação da API
 http://localhost:8080/swagger-ui/index.html
+
+# Documentação do PROJETO
+https://www.notion.so/Evolution-Team-Digital-Parking-96c5767bc5ac4506b4497998f261fef9?pvs=4
